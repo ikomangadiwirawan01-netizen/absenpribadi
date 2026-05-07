@@ -241,16 +241,33 @@
       return `${y}-${m}-${d}`;
     }
 
-    function simpanStatusHariIni(status){
-      const key = formatKey(new Date());
-      localStorage.setItem("absen_" + key, status);
-      buatKalender();
-    }
+    let dataAbsen = {};
 
-    function ambilStatusTanggal(date){
-      const key = formatKey(date);
-      return localStorage.getItem("absen_" + key);
-    }
+function ambilDataSpreadsheet() {
+  fetch(scriptURL)
+    .then(res => res.json())
+    .then(data => {
+      dataAbsen = {};
+
+      data.forEach(item => {
+        if (item.nama === namaSaya) {
+          dataAbsen[item.tanggal] = item.status;
+        }
+      });
+
+      buatKalender();
+    })
+    .catch(() => {
+      document.getElementById("hasil").innerHTML =
+        "Gagal mengambil data kalender";
+      buatKalender();
+    });
+}
+
+function ambilStatusTanggal(date){
+  const key = formatKey(date);
+  return dataAbsen[key];
+}
 
     function absen(status) {
       document.getElementById("hasil").innerHTML = "Mengirim absen...";
@@ -267,10 +284,11 @@
         })
       })
       .then(() => {
-        simpanStatusHariIni(status);
-        document.getElementById("hasil").innerHTML =
-          "Absen berhasil : " + status;
-      })
+	document.getElementById("hasil").innerHTML =
+		"Absen berhasil : " + status;
+
+	ambilDataSpreadsheet();
+	})
       .catch(() => {
         document.getElementById("hasil").innerHTML =
           "Gagal mengirim data";
@@ -341,7 +359,7 @@
       }
     }
 
-    buatKalender();
+    ambilDataSpreadsheet();
 
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("sw.js");
