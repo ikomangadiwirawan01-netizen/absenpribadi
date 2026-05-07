@@ -1,83 +1,107 @@
 <!DOCTYPE html>
-<html>
+<html lang="id">
 <head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Absen Pribadi</title>
 
-<style>
-  body{
-    font-family: Arial;
-    text-align:center;
-    margin-top:100px;
-  }
+  <link rel="manifest" href="manifest.json">
+  <meta name="theme-color" content="#008000">
 
-  button{
-    width:220px;
-    height:60px;
-    font-size:20px;
-    margin:10px;
-    border:none;
-    border-radius:10px;
-    cursor:pointer;
-    color:white;
-  }
+  <style>
+    body{
+      font-family: Arial;
+      text-align:center;
+      margin-top:100px;
+    }
 
-  .masuk{
-    background:green;
-  }
+    button{
+      width:220px;
+      height:60px;
+      font-size:20px;
+      margin:10px;
+      border:none;
+      border-radius:10px;
+      cursor:pointer;
+      color:white;
+    }
 
-  .setengah{
-    background:orange;
-  }
+    .masuk{ background:green; }
+    .setengah{ background:orange; }
+    .tidak{ background:red; }
 
-  .tidak{
-    background:red;
-  }
-</style>
+    #installBtn{
+      display:none;
+      background:#333;
+    }
+  </style>
 </head>
 
 <body>
 
   <h1>Absen Kerja</h1>
 
-  <button class="masuk" onclick="absen('Masuk')">
-  MASUK
-</button>
+  <button class="masuk" onclick="absen('Masuk')">MASUK</button>
+  <button class="setengah" onclick="absen('Setengah Hari')">SETENGAH HARI</button>
+  <button class="tidak" onclick="absen('Tidak Masuk')">TIDAK MASUK</button>
 
-<button class="setengah" onclick="absen('Setengah Hari')">
-  SETENGAH HARI
-</button>
+  <br><br>
 
-<button class="tidak" onclick="absen('Tidak Masuk')">
-  TIDAK MASUK
-</button>
+  <button id="installBtn">Install Aplikasi</button>
 
   <h3 id="hasil"></h3>
 
   <script>
-   const scriptURL = "https://script.google.com/macros/s/AKfycbxbIIKV0eXLUflgheBaM94SeWgmrbpe7UNG7b3c6DPqbuFZg7GrBm8-8u1UvUC039Rw/exec";
-const namaSaya = "MANGADI";
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxbIIKV0eXLUflgheBaM94SeWgmrbpe7UNG7b3c6DPqbuFZg7GrBm8-8u1UvUC039Rw/exec";
+    const namaSaya = "MANGADI";
 
-function absen(status) {
-  fetch(scriptURL, {
-    method: "POST",
-    mode: "no-cors",
-    headers: {
-      "Content-Type": "text/plain"
-    },
-    body: JSON.stringify({
-      nama: namaSaya,
-      status: status
-    })
-  })
-  .then(() => {
-    document.getElementById("hasil").innerHTML =
-      "Absen berhasil : " + status;
-  })
-  .catch(() => {
-    document.getElementById("hasil").innerHTML =
-      "Gagal mengirim data";
-  });
-}
+    function absen(status) {
+      document.getElementById("hasil").innerHTML = "Mengirim absen...";
+
+      fetch(scriptURL, {
+        method: "POST",
+        mode: "no-cors",
+        headers: {
+          "Content-Type": "text/plain"
+        },
+        body: JSON.stringify({
+          nama: namaSaya,
+          status: status
+        })
+      })
+      .then(() => {
+        document.getElementById("hasil").innerHTML =
+          "Absen berhasil : " + status;
+      })
+      .catch(() => {
+        document.getElementById("hasil").innerHTML =
+          "Gagal mengirim data";
+      });
+    }
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("sw.js");
+    }
+
+    let deferredPrompt;
+    const installBtn = document.getElementById("installBtn");
+
+    window.addEventListener("beforeinstallprompt", function(e) {
+      e.preventDefault();
+      deferredPrompt = e;
+      installBtn.style.display = "inline-block";
+    });
+
+    installBtn.addEventListener("click", async function() {
+      installBtn.style.display = "none";
+
+      if (deferredPrompt) {
+        deferredPrompt.prompt();
+        await deferredPrompt.userChoice;
+        deferredPrompt = null;
+      }
+    });
   </script>
 
 </body>
