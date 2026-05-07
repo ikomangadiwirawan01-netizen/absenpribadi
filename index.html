@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Absen Pribadi</title>
+
+  <style>
+    body{
+      font-family: Arial;
+      text-align:center;
+      margin-top:100px;
+    }
+
+    button{
+      width:200px;
+      height:60px;
+      font-size:20px;
+      margin:10px;
+      border:none;
+      border-radius:10px;
+      cursor:pointer;
+      color:white;
+    }
+
+    .masuk{
+      background:green;
+    }
+
+    .tidak{
+      background:red;
+    }
+  </style>
+</head>
+
+<body>
+
+  <h1>Absen Kerja</h1>
+
+  <button class="masuk" onclick="absen('Masuk')">
+    MASUK
+  </button>
+
+  <button class="tidak" onclick="absen('Tidak Masuk')">
+    TIDAK MASUK
+  </button>
+
+  <h3 id="hasil"></h3>
+
+  <script>
+    const scriptURL = "https://script.google.com/macros/s/AKfycbxbIIKV0eXLUflgheBaM94SeWgmrbpe7UNG7b3c6DPqbuFZg7GrBm8-8u1UvUC039Rw/exec";
+
+    const namaSaya = "MANG ADI";
+
+    function absen(status){
+
+      fetch(scriptURL,{
+        method:"POST",
+        body: JSON.stringify({
+          nama: namaSaya,
+          status: status
+        })
+      })
+      .then(res => res.json())
+      .then(data => {
+        document.getElementById("hasil").innerHTML =
+          "Absen berhasil : " + status;
+      })
+      .catch(err => {
+        document.getElementById("hasil").innerHTML =
+          "Gagal mengirim data";
+      });
+
+    }
+  </script>
+
+</body>
+</html>
