@@ -3,7 +3,6 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
   <title>Absen Pribadi</title>
 
   <link rel="manifest" href="manifest.json">
@@ -11,16 +10,41 @@
 
   <style>
     body{
-      font-family: Arial;
+      font-family: Arial, sans-serif;
       text-align:center;
-      margin-top:100px;
+      margin:0;
+      padding:20px;
+      background:#ffffff;
+    }
+
+    h1{
+      margin-top:20px;
+      margin-bottom:15px;
+    }
+
+    #tanggal{
+      display:inline-block;
+      background:#f1f1f1;
+      padding:12px 22px;
+      border-radius:10px;
+      font-size:22px;
+      color:#333;
+      font-weight:bold;
+      margin-bottom:15px;
+    }
+
+    .button-area{
+      display:flex;
+      justify-content:center;
+      gap:18px;
+      flex-wrap:wrap;
+      margin-bottom:25px;
     }
 
     button{
       width:220px;
       height:60px;
       font-size:20px;
-      margin:10px;
       border:none;
       border-radius:10px;
       cursor:pointer;
@@ -31,9 +55,137 @@
     .setengah{ background:orange; }
     .tidak{ background:red; }
 
+    #hasil{
+      margin-top:10px;
+      color:#333;
+    }
+
+    .calendar-box{
+      max-width:900px;
+      margin:20px auto;
+      border:2px solid #ddd;
+      border-radius:15px;
+      padding:20px;
+    }
+
+    .calendar-title{
+      font-size:24px;
+      font-weight:bold;
+      margin-bottom:15px;
+    }
+
+    .calendar{
+      display:grid;
+      grid-template-columns:repeat(7, 1fr);
+      gap:8px;
+    }
+
+    .day-name{
+      font-weight:bold;
+      padding:10px 0;
+      background:#f3f3f3;
+      border-radius:8px;
+    }
+
+    .day{
+      min-height:65px;
+      border:1px solid #ddd;
+      border-radius:10px;
+      display:flex;
+      flex-direction:column;
+      justify-content:center;
+      align-items:center;
+      font-size:18px;
+      background:#fff;
+    }
+
+    .today{
+      border:3px solid #008000;
+      font-weight:bold;
+    }
+
+    .dot{
+      width:13px;
+      height:13px;
+      border-radius:50%;
+      margin-top:8px;
+    }
+
+    .dot-masuk{ background:green; }
+    .dot-setengah{ background:orange; }
+    .dot-tidak{ background:red; }
+
+    .legend{
+      margin-top:18px;
+      display:flex;
+      justify-content:center;
+      gap:20px;
+      flex-wrap:wrap;
+      font-size:15px;
+    }
+
+    .legend span{
+      display:inline-flex;
+      align-items:center;
+      gap:6px;
+    }
+
+    .mini-dot{
+      width:12px;
+      height:12px;
+      border-radius:50%;
+      display:inline-block;
+    }
+
     #installBtn{
       display:none;
       background:#333;
+      margin-top:20px;
+    }
+
+    @media(max-width:600px){
+      body{
+        padding:15px;
+      }
+
+      h1{
+        font-size:28px;
+      }
+
+      #tanggal{
+        font-size:18px;
+      }
+
+      .button-area{
+        flex-direction:column;
+        align-items:center;
+        gap:10px;
+      }
+
+      button{
+        width:100%;
+        max-width:330px;
+        height:55px;
+        font-size:18px;
+      }
+
+      .calendar-box{
+        padding:10px;
+      }
+
+      .calendar{
+        gap:5px;
+      }
+
+      .day{
+        min-height:48px;
+        font-size:14px;
+      }
+
+      .day-name{
+        font-size:13px;
+        padding:7px 0;
+      }
     }
   </style>
 </head>
@@ -42,19 +194,63 @@
 
   <h1>Absen Kerja</h1>
 
-  <button class="masuk" onclick="absen('Masuk')">MASUK</button>
-  <button class="setengah" onclick="absen('Setengah Hari')">SETENGAH HARI</button>
-  <button class="tidak" onclick="absen('Tidak Masuk')">TIDAK MASUK</button>
+  <div id="tanggal"></div>
 
-  <br><br>
-
-  <button id="installBtn">Install Aplikasi</button>
+  <div class="button-area">
+    <button class="masuk" onclick="absen('Masuk')">MASUK</button>
+    <button class="setengah" onclick="absen('Setengah Hari')">SETENGAH HARI</button>
+    <button class="tidak" onclick="absen('Tidak Masuk')">TIDAK MASUK</button>
+  </div>
 
   <h3 id="hasil"></h3>
+
+  <div class="calendar-box">
+    <div class="calendar-title" id="calendarTitle"></div>
+
+    <div class="calendar" id="calendar"></div>
+
+    <div class="legend">
+      <span><i class="mini-dot" style="background:green"></i> Masuk</span>
+      <span><i class="mini-dot" style="background:orange"></i> Setengah Hari</span>
+      <span><i class="mini-dot" style="background:red"></i> Tidak Masuk</span>
+    </div>
+  </div>
+
+  <button id="installBtn">Install Aplikasi</button>
 
   <script>
     const scriptURL = "https://script.google.com/macros/s/AKfycbxbIIKV0eXLUflgheBaM94SeWgmrbpe7UNG7b3c6DPqbuFZg7GrBm8-8u1UvUC039Rw/exec";
     const namaSaya = "MANGADI";
+
+    const sekarang = new Date();
+    const tahun = sekarang.getFullYear();
+    const bulan = sekarang.getMonth();
+
+    document.getElementById("tanggal").textContent =
+      sekarang.toLocaleDateString("id-ID", {
+        weekday: "long",
+        day: "numeric",
+        month: "long",
+        year: "numeric"
+      });
+
+    function formatKey(date){
+      const y = date.getFullYear();
+      const m = String(date.getMonth() + 1).padStart(2, "0");
+      const d = String(date.getDate()).padStart(2, "0");
+      return `${y}-${m}-${d}`;
+    }
+
+    function simpanStatusHariIni(status){
+      const key = formatKey(new Date());
+      localStorage.setItem("absen_" + key, status);
+      buatKalender();
+    }
+
+    function ambilStatusTanggal(date){
+      const key = formatKey(date);
+      return localStorage.getItem("absen_" + key);
+    }
 
     function absen(status) {
       document.getElementById("hasil").innerHTML = "Mengirim absen...";
@@ -71,6 +267,7 @@
         })
       })
       .then(() => {
+        simpanStatusHariIni(status);
         document.getElementById("hasil").innerHTML =
           "Absen berhasil : " + status;
       })
@@ -79,6 +276,72 @@
           "Gagal mengirim data";
       });
     }
+
+    function buatKalender(){
+      const calendar = document.getElementById("calendar");
+      calendar.innerHTML = "";
+
+      const namaBulan = new Date(tahun, bulan).toLocaleDateString("id-ID", {
+        month: "long",
+        year: "numeric"
+      });
+
+      document.getElementById("calendarTitle").textContent = namaBulan;
+
+      const hari = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+
+      hari.forEach(h => {
+        const div = document.createElement("div");
+        div.className = "day-name";
+        div.textContent = h;
+        calendar.appendChild(div);
+      });
+
+      const hariPertama = new Date(tahun, bulan, 1).getDay();
+      const jumlahHari = new Date(tahun, bulan + 1, 0).getDate();
+
+      for(let i = 0; i < hariPertama; i++){
+        const kosong = document.createElement("div");
+        calendar.appendChild(kosong);
+      }
+
+      for(let tgl = 1; tgl <= jumlahHari; tgl++){
+        const date = new Date(tahun, bulan, tgl);
+        const day = document.createElement("div");
+        day.className = "day";
+
+        if(
+          tgl === sekarang.getDate() &&
+          bulan === sekarang.getMonth() &&
+          tahun === sekarang.getFullYear()
+        ){
+          day.classList.add("today");
+        }
+
+        day.innerHTML = `<div>${tgl}</div>`;
+
+        const status = ambilStatusTanggal(date);
+
+        if(status){
+          const dot = document.createElement("div");
+          dot.className = "dot";
+
+          if(status === "Masuk"){
+            dot.classList.add("dot-masuk");
+          } else if(status === "Setengah Hari"){
+            dot.classList.add("dot-setengah");
+          } else if(status === "Tidak Masuk"){
+            dot.classList.add("dot-tidak");
+          }
+
+          day.appendChild(dot);
+        }
+
+        calendar.appendChild(day);
+      }
+    }
+
+    buatKalender();
 
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("sw.js");
