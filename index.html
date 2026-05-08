@@ -275,63 +275,55 @@
     }
 
     function ambilDataSpreadsheet() {
-      const callbackName = "terimaDataAbsen_" + Date.now();
+  const callbackName = "terimaDataAbsen_" + Date.now();
 
-      window[callbackName] = function(data) {
-        dataAbsen = {};
+  window[callbackName] = function(data) {
+    dataAbsen = {};
 
-        let jumlahDataCocok = 0;
+    let jumlahDataCocok = 0;
 
-        data.forEach(function(item) {
-          const nama = String(item.nama).trim().toUpperCase();
-          const tanggal = normalisasiTanggal(item.tanggal);
-          const status = String(item.status).trim();
+    data.forEach(function(item) {
+      const nama = String(item.nama || "").trim().toUpperCase();
+      const tanggal = String(item.tanggal || "").trim();
+      const status = String(item.status || "").trim().toLowerCase();
 
-          if (nama === namaSaya.toUpperCase()) {
-            dataAbsen[tanggal] = status;
-            jumlahDataCocok++;
-          }
-        });
-
-        console.log("Data spreadsheet asli:", data);
-        console.log("Data kalender:", dataAbsen);
-
-        buatKalender();
-
-        document.getElementById("hasil").innerHTML =
-          "Data kalender dimuat : " + jumlahDataCocok + " data";
-
-        delete window[callbackName];
-
-        const scriptLama = document.getElementById("jsonpDataAbsen");
-        if (scriptLama) {
-          scriptLama.remove();
-        }
-      };
-
-      const oldScript = document.getElementById("jsonpDataAbsen");
-
-      if (oldScript) {
-        oldScript.remove();
+      if (nama === namaSaya.toUpperCase()) {
+        dataAbsen[tanggal] = status;
+        jumlahDataCocok++;
       }
+    });
 
-      const script = document.createElement("script");
-      script.id = "jsonpDataAbsen";
-      script.src =
-        scriptURL +
-        "?callback=" +
-        callbackName +
-        "&v=" +
-        Date.now();
+    console.log("DATA ABSEN:", dataAbsen);
 
-      script.onerror = function() {
-        document.getElementById("hasil").innerHTML =
-          "Gagal mengambil data kalender";
-        buatKalender();
-      };
+    buatKalender();
 
-      document.body.appendChild(script);
-    }
+    document.getElementById("hasil").innerHTML =
+      "Data kalender dimuat : " + jumlahDataCocok + " data";
+  };
+
+  const oldScript = document.getElementById("jsonpDataAbsen");
+
+  if (oldScript) {
+    oldScript.remove();
+  }
+
+  const script = document.createElement("script");
+  script.id = "jsonpDataAbsen";
+  script.src =
+    scriptURL +
+    "?callback=" +
+    callbackName +
+    "&v=" +
+    Date.now();
+
+  script.onerror = function() {
+    document.getElementById("hasil").innerHTML =
+      "Gagal mengambil data kalender";
+    buatKalender();
+  };
+
+  document.body.appendChild(script);
+}
 
     function ambilStatusTanggal(date) {
       const key = formatKey(date);
@@ -430,21 +422,24 @@
 
         const status = ambilStatusTanggal(date);
 
-        if(status){
-          const dot = document.createElement("div");
-          dot.className = "dot";
+        const status = ambilStatusTanggal(date);
 
-          if(status === "Masuk"){
-            dot.classList.add("dot-masuk");
-          } else if(status === "Setengah Hari"){
-            dot.classList.add("dot-setengah");
-          } else if(status === "Tidak Masuk"){
-            dot.classList.add("dot-tidak");
-          }
+if(status){
+  const dot = document.createElement("div");
+  dot.className = "dot";
 
-          day.appendChild(dot);
-        }
+  if(status === "masuk"){
+    dot.style.background = "green";
+  } else if(status === "setengah hari"){
+    dot.style.background = "orange";
+  } else if(status === "tidak masuk"){
+    dot.style.background = "red";
+  } else {
+    dot.style.background = "blue";
+  }
 
+  day.appendChild(dot);
+}
         calendar.appendChild(day);
       }
     }
