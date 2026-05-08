@@ -187,6 +187,20 @@
         padding:7px 0;
       }
     }
+	.edit-box{
+	margin:25px auto;
+	padding:15px;
+	max-width:500px;
+	background:#f7f7f7;
+	border-radius:12px;
+	}
+
+	input[type="date"]{
+	padding:12px;
+	font-size:18px;
+	border-radius:8px;
+	border:1px solid #ccc;
+	}
   </style>
 </head>
 
@@ -201,6 +215,17 @@
     <button class="setengah" onclick="absen('Setengah Hari')">SETENGAH HARI</button>
     <button class="tidak" onclick="absen('Tidak Masuk')">TIDAK MASUK</button>
   </div>
+  <div class="edit-box">
+  <h3>Koreksi Absen</h3>
+
+  <input type="date" id="tanggalKoreksi">
+
+  <br><br>
+
+  <button class="masuk" onclick="absenTanggal('Masuk')">MASUK</button>
+  <button class="setengah" onclick="absenTanggal('Setengah Hari')">SETENGAH HARI</button>
+  <button class="tidak" onclick="absenTanggal('Tidak Masuk')">TIDAK MASUK</button>
+</div>
 
   <h3 id="hasil"></h3>
 
@@ -383,6 +408,39 @@ function ambilStatusTanggal(date){
         deferredPrompt = null;
       }
     });
+	function absenTanggal(status) {
+  const tanggalInput = document.getElementById("tanggalKoreksi").value;
+
+  if (!tanggalInput) {
+    alert("Pilih tanggal yang ingin dikoreksi");
+    return;
+  }
+
+  document.getElementById("hasil").innerHTML = "Mengirim koreksi...";
+
+  fetch(scriptURL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: {
+      "Content-Type": "text/plain"
+    },
+    body: JSON.stringify({
+      nama: namaSaya,
+      status: status,
+      tanggal: tanggalInput
+    })
+  })
+  .then(() => {
+    document.getElementById("hasil").innerHTML =
+      "Koreksi berhasil : " + tanggalInput + " - " + status;
+
+    setTimeout(ambilDataSpreadsheet, 1000);
+  })
+  .catch(() => {
+    document.getElementById("hasil").innerHTML =
+      "Gagal mengirim koreksi";
+  });
+}
   </script>
 
 </body>
