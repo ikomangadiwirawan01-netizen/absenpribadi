@@ -252,6 +252,24 @@
         opacity:1;
       }
     }
+    .offline-bar{
+  display:none;
+  position:fixed;
+  top:0;
+  left:0;
+  right:0;
+  background:#dc2626;
+  color:white;
+  padding:12px;
+  font-size:16px;
+  font-weight:bold;
+  z-index:10000;
+  text-align:center;
+}
+
+body.offline-padding{
+  padding-top:60px;
+}
 
     @media(max-width:600px){
       body{
@@ -309,6 +327,10 @@
 </head>
 
 <body>
+
+  <div id="offlineBar" class="offline-bar">
+    Anda sedang offline. Data absen membutuhkan internet.
+  </div>
 
   <h1>Absen Kerja</h1>
 
@@ -482,6 +504,11 @@
     }
 
     function absen(status) {
+      if (!navigator.onLine) {
+  document.getElementById("hasil").innerHTML =
+    "Anda sedang offline. Absen belum bisa dikirim.";
+  return;
+}
       if (!tanggalDipilih) {
         alert("Pilih tanggal di kalender terlebih dahulu");
         return;
@@ -634,6 +661,22 @@
         deferredPrompt = null;
       }
     });
+    function updateStatusOnline() {
+  const offlineBar = document.getElementById("offlineBar");
+
+  if (!navigator.onLine) {
+    offlineBar.style.display = "block";
+    document.body.classList.add("offline-padding");
+  } else {
+    offlineBar.style.display = "none";
+    document.body.classList.remove("offline-padding");
+  }
+}
+
+window.addEventListener("online", updateStatusOnline);
+window.addEventListener("offline", updateStatusOnline);
+
+updateStatusOnline();
   </script>
 
 </body>
