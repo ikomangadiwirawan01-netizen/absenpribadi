@@ -257,25 +257,34 @@
     }
 
     function ambilDataSpreadsheet() {
-      fetch(scriptURL + "?v=" + Date.now())
-        .then(res => res.json())
-        .then(data => {
-          dataAbsen = {};
+  const callbackName = "terimaDataAbsen_" + Date.now();
 
-          data.forEach(item => {
-            if (item.nama === namaSaya) {
-              dataAbsen[item.tanggal] = item.status;
-            }
-          });
+  window[callbackName] = function(data) {
+    dataAbsen = {};
 
-          buatKalender();
-        })
-        .catch(() => {
-          document.getElementById("hasil").innerHTML =
-            "Gagal mengambil data kalender";
-          buatKalender();
-        });
-    }
+    data.forEach(item => {
+      if (item.nama === namaSaya) {
+        dataAbsen[item.tanggal] = item.status;
+      }
+    });
+
+    buatKalender();
+
+    delete window[callbackName];
+    script.remove();
+  };
+
+  const script = document.createElement("script");
+  script.src = scriptURL + "?callback=" + callbackName + "&v=" + Date.now();
+
+  script.onerror = function() {
+    document.getElementById("hasil").innerHTML =
+      "Gagal mengambil data kalender";
+    buatKalender();
+  };
+
+  document.body.appendChild(script);
+}
 
     function ambilStatusTanggal(date){
       const key = formatKey(date);
