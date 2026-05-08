@@ -1,4 +1,4 @@
-const CACHE_NAME = "absen-pribadi-v37";
+const CACHE_NAME = "absen-pribadi-v40";
 
 const FILES_TO_CACHE = [
   "./",
