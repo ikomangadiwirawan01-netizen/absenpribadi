@@ -253,80 +253,73 @@
     }
 
     function normalisasiTanggal(value) {
-      value = String(value || "").trim();
+  value = String(value || "").trim();
 
-      if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
-        return value;
-      }
+  // Ambil pola tanggal 2026-05-01 dari teks apa pun
+  const matchFormatStrip = value.match(/(\d{4})-(\d{2})-(\d{2})/);
+  if (matchFormatStrip) {
+    return matchFormatStrip[1] + "-" + matchFormatStrip[2] + "-" + matchFormatStrip[3];
+  }
 
-      if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(value)) {
-        const p = value.split("/");
-        const d = p[0].padStart(2, "0");
-        const m = p[1].padStart(2, "0");
-        const y = p[2];
-        return y + "-" + m + "-" + d;
-      }
+  // Ambil pola tanggal 01/05/2026 atau 1/5/2026
+  const matchFormatSlash = value.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+  if (matchFormatSlash) {
+    const d = matchFormatSlash[1].padStart(2, "0");
+    const m = matchFormatSlash[2].padStart(2, "0");
+    const y = matchFormatSlash[3];
+    return y + "-" + m + "-" + d;
+  }
 
-      return value;
-    }
+  return value;
+}
 
     function ambilDataSpreadsheet() {
-      const callbackName = "terimaDataAbsen_" + Date.now();
+  const callbackName = "terimaDataAbsen_" + Date.now();
 
-      window[callbackName] = function(data) {
-        dataAbsen = {};
+  window[callbackName] = function(data) {
+    dataAbsen = {};
 
-        let jumlahDataCocok = 0;
+    let jumlahDataCocok = 0;
 
-        data.forEach(function(item) {
-          const nama = String(item.nama || "").trim().toUpperCase();
-          const tanggal = normalisasiTanggal(item.tanggal);
-          const status = String(item.status || "").trim().toLowerCase();
+    data.forEach(function(item) {
+      const nama = String(item.nama || "").trim().toUpperCase();
+      const tanggal = normalisasiTanggal(item.tanggal);
+      const status = String(item.status || "").trim().toLowerCase();
 
-          if (nama === namaSaya.toUpperCase()) {
-            dataAbsen[tanggal] = status;
-            jumlahDataCocok++;
-          }
-        });
-
-        console.log("DATA ABSEN:", dataAbsen);
-
-        buatKalender();
-
-        document.getElementById("hasil").innerHTML =
-          "Data kalender dimuat : " + jumlahDataCocok + " data";
-
-        delete window[callbackName];
-
-        const scriptLama = document.getElementById("jsonpDataAbsen");
-        if (scriptLama) {
-          scriptLama.remove();
-        }
-      };
-
-      const oldScript = document.getElementById("jsonpDataAbsen");
-
-      if (oldScript) {
-        oldScript.remove();
+      if (nama === namaSaya.toUpperCase() && tanggal) {
+        dataAbsen[tanggal] = status;
+        jumlahDataCocok++;
       }
+    });
 
-      const script = document.createElement("script");
-      script.id = "jsonpDataAbsen";
-      script.src =
-        scriptURL +
-        "?callback=" +
-        callbackName +
-        "&v=" +
-        Date.now();
+    buatKalender();
 
-      script.onerror = function() {
-        document.getElementById("hasil").innerHTML =
-          "Gagal mengambil data kalender";
-        buatKalender();
-      };
+    document.getElementById("hasil").innerHTML =
+      "Data kalender dimuat : " + jumlahDataCocok + " data";
+  };
 
-      document.body.appendChild(script);
-    }
+  const oldScript = document.getElementById("jsonpDataAbsen");
+  if (oldScript) {
+    oldScript.remove();
+  }
+
+  const script = document.createElement("script");
+  script.id = "jsonpDataAbsen";
+  script.src =
+    scriptURL +
+    "?callback=" +
+    callbackName +
+    "&v=" +
+    Date.now();
+
+  script.onerror = function() {
+    document.getElementById("hasil").innerHTML =
+      "Gagal mengambil data kalender";
+    buatKalender();
+  };
+
+  document.body.appendChild(script);
+}
 
     function ambilStatusTanggal(date) {
       const key = formatKey(date);
@@ -423,24 +416,24 @@
           buatKalender();
         });
 
-        const status = ambilStatusTanggal(date);
+        const status = String(dataAbsen[keyTanggal] || "").trim().toLowerCase();
 
-        if(status){
-          const dot = document.createElement("div");
-          dot.className = "dot";
+if(status){
+  const dot = document.createElement("div");
+  dot.className = "dot";
 
-          if(status === "masuk"){
-            dot.style.background = "green";
-          } else if(status === "setengah hari"){
-            dot.style.background = "orange";
-          } else if(status === "tidak masuk"){
-            dot.style.background = "red";
-          } else {
-            dot.style.background = "blue";
-          }
+  if(status.includes("setengah")){
+    dot.style.background = "orange";
+  } else if(status.includes("tidak")){
+    dot.style.background = "red";
+  } else if(status.includes("masuk")){
+    dot.style.background = "green";
+  } else {
+    dot.style.background = "blue";
+  }
 
-          day.appendChild(dot);
-        }
+  day.appendChild(dot);
+}
 
         calendar.appendChild(day);
       }
