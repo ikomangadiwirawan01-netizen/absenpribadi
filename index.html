@@ -38,7 +38,7 @@
       justify-content:center;
       gap:18px;
       flex-wrap:wrap;
-      margin-bottom:25px;
+      margin-bottom:15px;
     }
 
     button{
@@ -58,6 +58,8 @@
     #hasil{
       margin-top:10px;
       color:#333;
+      min-height:30px;
+      font-weight:bold;
     }
 
     .calendar-box{
@@ -97,10 +99,21 @@
       align-items:center;
       font-size:18px;
       background:#fff;
+      cursor:pointer;
+    }
+
+    .day:hover{
+      background:#f5fff5;
     }
 
     .today{
       border:3px solid #008000;
+      font-weight:bold;
+    }
+
+    .selected{
+      background:#dbeafe !important;
+      border:3px solid #2563eb !important;
       font-weight:bold;
     }
 
@@ -187,20 +200,6 @@
         padding:7px 0;
       }
     }
-	.edit-box{
-	margin:25px auto;
-	padding:15px;
-	max-width:500px;
-	background:#f7f7f7;
-	border-radius:12px;
-	}
-
-	input[type="date"]{
-	padding:12px;
-	font-size:18px;
-	border-radius:8px;
-	border:1px solid #ccc;
-	}
   </style>
 </head>
 
@@ -215,23 +214,11 @@
     <button class="setengah" onclick="absen('Setengah Hari')">SETENGAH HARI</button>
     <button class="tidak" onclick="absen('Tidak Masuk')">TIDAK MASUK</button>
   </div>
-  <div class="edit-box">
-  <h3>Koreksi Absen</h3>
 
-  <input type="date" id="tanggalKoreksi">
-
-  <br><br>
-
-  <button class="masuk" onclick="absenTanggal('Masuk')">MASUK</button>
-  <button class="setengah" onclick="absenTanggal('Setengah Hari')">SETENGAH HARI</button>
-  <button class="tidak" onclick="absenTanggal('Tidak Masuk')">TIDAK MASUK</button>
-</div>
-
-  <h3 id="hasil"></h3>
+  <h3 id="hasil">Pilih tanggal di kalender terlebih dahulu</h3>
 
   <div class="calendar-box">
     <div class="calendar-title" id="calendarTitle"></div>
-
     <div class="calendar" id="calendar"></div>
 
     <div class="legend">
@@ -251,6 +238,9 @@
     const tahun = sekarang.getFullYear();
     const bulan = sekarang.getMonth();
 
+    let dataAbsen = {};
+    let tanggalDipilih = "";
+
     document.getElementById("tanggal").textContent =
       sekarang.toLocaleDateString("id-ID", {
         weekday: "long",
@@ -263,38 +253,41 @@
       const y = date.getFullYear();
       const m = String(date.getMonth() + 1).padStart(2, "0");
       const d = String(date.getDate()).padStart(2, "0");
-      return `${y}-${m}-${d}`;
+      return y + "-" + m + "-" + d;
     }
 
-    let dataAbsen = {};
+    function ambilDataSpreadsheet() {
+      fetch(scriptURL + "?v=" + Date.now())
+        .then(res => res.json())
+        .then(data => {
+          dataAbsen = {};
 
-function ambilDataSpreadsheet() {
-  fetch(scriptURL)
-    .then(res => res.json())
-    .then(data => {
-      dataAbsen = {};
+          data.forEach(item => {
+            if (item.nama === namaSaya) {
+              dataAbsen[item.tanggal] = item.status;
+            }
+          });
 
-      data.forEach(item => {
-        if (item.nama === namaSaya) {
-          dataAbsen[item.tanggal] = item.status;
-        }
-      });
+          buatKalender();
+        })
+        .catch(() => {
+          document.getElementById("hasil").innerHTML =
+            "Gagal mengambil data kalender";
+          buatKalender();
+        });
+    }
 
-      buatKalender();
-    })
-    .catch(() => {
-      document.getElementById("hasil").innerHTML =
-        "Gagal mengambil data kalender";
-      buatKalender();
-    });
-}
-
-function ambilStatusTanggal(date){
-  const key = formatKey(date);
-  return dataAbsen[key];
-}
+    function ambilStatusTanggal(date){
+      const key = formatKey(date);
+      return dataAbsen[key];
+    }
 
     function absen(status) {
+      if (!tanggalDipilih) {
+        alert("Pilih tanggal di kalender terlebih dahulu");
+        return;
+      }
+
       document.getElementById("hasil").innerHTML = "Mengirim absen...";
 
       fetch(scriptURL, {
@@ -305,15 +298,16 @@ function ambilStatusTanggal(date){
         },
         body: JSON.stringify({
           nama: namaSaya,
-          status: status
+          status: status,
+          tanggal: tanggalDipilih
         })
       })
       .then(() => {
-	document.getElementById("hasil").innerHTML =
-		"Absen berhasil : " + status;
+        document.getElementById("hasil").innerHTML =
+          "Absen berhasil : " + tanggalDipilih + " - " + status;
 
-	ambilDataSpreadsheet();
-	})
+        setTimeout(ambilDataSpreadsheet, 1500);
+      })
       .catch(() => {
         document.getElementById("hasil").innerHTML =
           "Gagal mengirim data";
@@ -350,6 +344,8 @@ function ambilStatusTanggal(date){
 
       for(let tgl = 1; tgl <= jumlahHari; tgl++){
         const date = new Date(tahun, bulan, tgl);
+        const keyTanggal = formatKey(date);
+
         const day = document.createElement("div");
         day.className = "day";
 
@@ -361,7 +357,20 @@ function ambilStatusTanggal(date){
           day.classList.add("today");
         }
 
-        day.innerHTML = `<div>${tgl}</div>`;
+        if(keyTanggal === tanggalDipilih){
+          day.classList.add("selected");
+        }
+
+        day.innerHTML = "<div>" + tgl + "</div>";
+
+        day.addEventListener("click", function() {
+          tanggalDipilih = keyTanggal;
+
+          document.getElementById("hasil").innerHTML =
+            "Tanggal dipilih : " + tanggalDipilih;
+
+          buatKalender();
+        });
 
         const status = ambilStatusTanggal(date);
 
@@ -408,39 +417,6 @@ function ambilStatusTanggal(date){
         deferredPrompt = null;
       }
     });
-	function absenTanggal(status) {
-  const tanggalInput = document.getElementById("tanggalKoreksi").value;
-
-  if (!tanggalInput) {
-    alert("Pilih tanggal yang ingin dikoreksi");
-    return;
-  }
-
-  document.getElementById("hasil").innerHTML = "Mengirim koreksi...";
-
-  fetch(scriptURL, {
-    method: "POST",
-    mode: "no-cors",
-    headers: {
-      "Content-Type": "text/plain"
-    },
-    body: JSON.stringify({
-      nama: namaSaya,
-      status: status,
-      tanggal: tanggalInput
-    })
-  })
-  .then(() => {
-    document.getElementById("hasil").innerHTML =
-      "Koreksi berhasil : " + tanggalInput + " - " + status;
-
-    setTimeout(ambilDataSpreadsheet, 1000);
-  })
-  .catch(() => {
-    document.getElementById("hasil").innerHTML =
-      "Gagal mengirim koreksi";
-  });
-}
   </script>
 
 </body>
