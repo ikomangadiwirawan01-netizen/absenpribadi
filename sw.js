@@ -1,4 +1,4 @@
-const CACHE_NAME = "absen-pribadi-v40";
+const CACHE_NAME = "absen-pribadi-v80";
 
 const FILES_TO_CACHE = [
   "./",
@@ -9,12 +9,13 @@ const FILES_TO_CACHE = [
 ];
 
 self.addEventListener("install", function(event) {
+  self.skipWaiting();
+
   event.waitUntil(
     caches.open(CACHE_NAME).then(function(cache) {
       return cache.addAll(FILES_TO_CACHE);
     })
   );
-  self.skipWaiting();
 });
 
 self.addEventListener("activate", function(event) {
@@ -27,14 +28,25 @@ self.addEventListener("activate", function(event) {
           }
         })
       );
+    }).then(function() {
+      return self.clients.claim();
     })
   );
 });
 
 self.addEventListener("fetch", function(event) {
+  if (event.request.mode === "navigate") {
+    event.respondWith(
+      fetch(event.request).catch(function() {
+        return caches.match("./index.html");
+      })
+    );
+    return;
+  }
+
   event.respondWith(
-    caches.match(event.request).then(function(response) {
-      return response || fetch(event.request);
+    fetch(event.request).catch(function() {
+      return caches.match(event.request);
     })
   );
 });
