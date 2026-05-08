@@ -1,6 +1,10 @@
 <!DOCTYPE html>
 <html lang="id">
+
 <head>
+  <!-- =======================================================
+       BAGIAN 1: PENGATURAN DASAR HALAMAN
+  ======================================================== -->
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Absen Pribadi</title>
@@ -8,7 +12,13 @@
   <link rel="manifest" href="manifest.json">
   <meta name="theme-color" content="#008000">
 
+  <!-- =======================================================
+       BAGIAN 2: STYLE / TAMPILAN CSS
+  ======================================================== -->
   <style>
+    /* =======================================================
+       2.1 STYLE BODY UTAMA
+    ======================================================== */
     body{
       font-family: Arial, sans-serif;
       text-align:center;
@@ -17,11 +27,18 @@
       background:#ffffff;
     }
 
+    body.offline-padding{
+      padding-top:60px;
+    }
+
     h1{
       margin-top:20px;
       margin-bottom:15px;
     }
 
+    /* =======================================================
+       2.2 STYLE TANGGAL HARI INI
+    ======================================================== */
     #tanggal{
       display:inline-block;
       background:#f1f1f1;
@@ -33,6 +50,9 @@
       margin-bottom:15px;
     }
 
+    /* =======================================================
+       2.3 STYLE TOMBOL ABSEN
+    ======================================================== */
     .button-area{
       display:flex;
       justify-content:center;
@@ -62,6 +82,27 @@
       font-weight:bold;
     }
 
+    /* =======================================================
+       2.4 STYLE BAR OFFLINE
+    ======================================================== */
+    .offline-bar{
+      display:none;
+      position:fixed;
+      top:0;
+      left:0;
+      right:0;
+      background:#dc2626;
+      color:white;
+      padding:12px;
+      font-size:16px;
+      font-weight:bold;
+      z-index:10000;
+      text-align:center;
+    }
+
+    /* =======================================================
+       2.5 STYLE KALENDER
+    ======================================================== */
     .calendar-box{
       max-width:900px;
       margin:20px auto;
@@ -70,10 +111,19 @@
       padding:20px;
     }
 
+    .calendar-header{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:15px;
+      gap:15px;
+    }
+
     .calendar-title{
       font-size:24px;
       font-weight:bold;
-      margin-bottom:15px;
+      flex:1;
+      text-align:center;
     }
 
     .calendar{
@@ -139,6 +189,9 @@
       border:3px solid #dc2626;
     }
 
+    /* =======================================================
+       2.6 STYLE TITIK WARNA STATUS ABSEN
+    ======================================================== */
     .dot{
       width:13px;
       height:13px;
@@ -168,12 +221,53 @@
       display:inline-block;
     }
 
+    /* =======================================================
+       2.7 STYLE TOMBOL SEGITIGA PINDAH BULAN
+    ======================================================== */
+    .nav-bulan{
+      width:42px;
+      height:42px;
+      border:none;
+      background:transparent;
+      cursor:pointer;
+      position:relative;
+      flex-shrink:0;
+    }
+
+    .nav-bulan:hover{
+      transform:scale(1.08);
+    }
+
+    .nav-bulan::before{
+      content:"";
+      display:block;
+      width:0;
+      height:0;
+      margin:auto;
+      border-top:12px solid transparent;
+      border-bottom:12px solid transparent;
+    }
+
+    .nav-kiri::before{
+      border-right:18px solid #ef4444;
+    }
+
+    .nav-kanan::before{
+      border-left:18px solid #ef4444;
+    }
+
+    /* =======================================================
+       2.8 STYLE TOMBOL INSTALL PWA
+    ======================================================== */
     #installBtn{
       display:none;
       background:#333;
       margin-top:20px;
     }
 
+    /* =======================================================
+       2.9 STYLE MODAL KONFIRMASI TANGGAL
+    ======================================================== */
     .modal-overlay{
       display:none;
       position:fixed;
@@ -252,25 +346,10 @@
         opacity:1;
       }
     }
-    .offline-bar{
-  display:none;
-  position:fixed;
-  top:0;
-  left:0;
-  right:0;
-  background:#dc2626;
-  color:white;
-  padding:12px;
-  font-size:16px;
-  font-weight:bold;
-  z-index:10000;
-  text-align:center;
-}
 
-body.offline-padding{
-  padding-top:60px;
-}
-
+    /* =======================================================
+       2.10 STYLE RESPONSIVE UNTUK HP
+    ======================================================== */
     @media(max-width:600px){
       body{
         padding:15px;
@@ -328,24 +407,47 @@ body.offline-padding{
 
 <body>
 
+  <!-- =======================================================
+       BAGIAN 3: BAR NOTIFIKASI OFFLINE
+  ======================================================== -->
   <div id="offlineBar" class="offline-bar">
     Anda sedang offline. Data absen membutuhkan internet.
   </div>
 
+  <!-- =======================================================
+       BAGIAN 4: JUDUL APLIKASI DAN TANGGAL HARI INI
+  ======================================================== -->
   <h1>Absen Kerja</h1>
 
   <div id="tanggal"></div>
 
+  <!-- =======================================================
+       BAGIAN 5: TOMBOL ABSEN
+  ======================================================== -->
   <div class="button-area">
     <button class="masuk" onclick="absen('Masuk')">MASUK</button>
     <button class="setengah" onclick="absen('Setengah Hari')">SETENGAH HARI</button>
     <button class="tidak" onclick="absen('Tidak Masuk')">TIDAK MASUK</button>
   </div>
 
+  <!-- =======================================================
+       BAGIAN 6: STATUS / PESAN HASIL
+  ======================================================== -->
   <h3 id="hasil">Memuat data kalender...</h3>
 
+  <!-- =======================================================
+       BAGIAN 7: KALENDER ABSEN
+  ======================================================== -->
   <div class="calendar-box">
-    <div class="calendar-title" id="calendarTitle"></div>
+
+    <div class="calendar-header">
+      <button class="nav-bulan nav-kiri" id="prevMonthBtn" type="button" aria-label="Bulan sebelumnya"></button>
+
+      <div class="calendar-title" id="calendarTitle"></div>
+
+      <button class="nav-bulan nav-kanan" id="nextMonthBtn" type="button" aria-label="Bulan berikutnya"></button>
+    </div>
+
     <div class="calendar" id="calendar"></div>
 
     <div class="legend">
@@ -354,10 +456,17 @@ body.offline-padding{
       <span><i class="mini-dot" style="background:red"></i> Tidak Masuk</span>
       <span><i class="mini-dot" style="background:#fee2e2; border:1px solid #dc2626"></i> Hari Minggu</span>
     </div>
+
   </div>
 
+  <!-- =======================================================
+       BAGIAN 8: TOMBOL INSTALL PWA
+  ======================================================== -->
   <button id="installBtn">Install Aplikasi</button>
 
+  <!-- =======================================================
+       BAGIAN 9: MODAL KONFIRMASI TANGGAL
+  ======================================================== -->
   <div class="modal-overlay" id="modalTanggal">
     <div class="modal-box">
       <div class="modal-icon">!</div>
@@ -373,18 +482,29 @@ body.offline-padding{
     </div>
   </div>
 
+  <!-- =======================================================
+       BAGIAN 10: JAVASCRIPT UTAMA
+  ======================================================== -->
   <script>
+
+    /* =======================================================
+       10.1 KONFIGURASI APLIKASI
+    ======================================================== */
     const scriptURL = "https://script.google.com/macros/s/AKfycbwgA5-L3qyLPOl5L_vikrd8AfMDj95UZcFMhdJLWHxxGWdcfMp0qXQtLPYszWdw5XvX/exec";
     const namaSaya = "MANGADI";
 
     const sekarang = new Date();
-    const tahun = sekarang.getFullYear();
-    const bulan = sekarang.getMonth();
+
+    let tahunTampil = sekarang.getFullYear();
+    let bulanTampil = sekarang.getMonth();
 
     let dataAbsen = {};
     let tanggalDipilih = "";
     let tanggalPending = "";
 
+    /* =======================================================
+       10.2 TAMPILKAN TANGGAL HARI INI
+    ======================================================== */
     document.getElementById("tanggal").textContent =
       sekarang.toLocaleDateString("id-ID", {
         weekday: "long",
@@ -393,6 +513,9 @@ body.offline-padding{
         year: "numeric"
       });
 
+    /* =======================================================
+       10.3 FORMAT TANGGAL MENJADI yyyy-mm-dd
+    ======================================================== */
     function formatKey(date){
       const y = date.getFullYear();
       const m = String(date.getMonth() + 1).padStart(2, "0");
@@ -400,6 +523,9 @@ body.offline-padding{
       return y + "-" + m + "-" + d;
     }
 
+    /* =======================================================
+       10.4 NORMALISASI TANGGAL DARI SPREADSHEET
+    ======================================================== */
     function normalisasiTanggal(value) {
       value = String(value || "").trim();
 
@@ -419,6 +545,9 @@ body.offline-padding{
       return value;
     }
 
+    /* =======================================================
+       10.5 MODAL KONFIRMASI SAAT PILIH TANGGAL LAIN
+    ======================================================== */
     function tampilModalTanggal(tanggal) {
       tanggalPending = tanggal;
 
@@ -445,9 +574,13 @@ body.offline-padding{
       buatKalender();
     }
 
+    /* =======================================================
+       10.6 AMBIL DATA DARI GOOGLE SPREADSHEET
+    ======================================================== */
     function ambilDataSpreadsheet() {
       document.getElementById("hasil").innerHTML =
-  "Memuat data kalender...";
+        "Memuat data kalender...";
+
       const callbackName = "terimaDataAbsen_" + Date.now();
 
       window[callbackName] = function(data) {
@@ -503,12 +636,16 @@ body.offline-padding{
       document.body.appendChild(script);
     }
 
+    /* =======================================================
+       10.7 KIRIM ABSEN KE GOOGLE SPREADSHEET
+    ======================================================== */
     function absen(status) {
       if (!navigator.onLine) {
-  document.getElementById("hasil").innerHTML =
-    "Anda sedang offline. Absen belum bisa dikirim.";
-  return;
-}
+        document.getElementById("hasil").innerHTML =
+          "Anda sedang offline. Absen belum bisa dikirim.";
+        return;
+      }
+
       if (!tanggalDipilih) {
         alert("Pilih tanggal di kalender terlebih dahulu");
         return;
@@ -540,11 +677,14 @@ body.offline-padding{
       });
     }
 
+    /* =======================================================
+       10.8 BUAT DAN TAMPILKAN KALENDER
+    ======================================================== */
     function buatKalender(){
       const calendar = document.getElementById("calendar");
       calendar.innerHTML = "";
 
-      const namaBulan = new Date(tahun, bulan).toLocaleDateString("id-ID", {
+      const namaBulan = new Date(tahunTampil, bulanTampil).toLocaleDateString("id-ID", {
         month: "long",
         year: "numeric"
       });
@@ -565,8 +705,8 @@ body.offline-padding{
         calendar.appendChild(div);
       });
 
-      const hariPertama = new Date(tahun, bulan, 1).getDay();
-      const jumlahHari = new Date(tahun, bulan + 1, 0).getDate();
+      const hariPertama = new Date(tahunTampil, bulanTampil, 1).getDay();
+      const jumlahHari = new Date(tahunTampil, bulanTampil + 1, 0).getDate();
 
       for(let i = 0; i < hariPertama; i++){
         const kosong = document.createElement("div");
@@ -574,7 +714,7 @@ body.offline-padding{
       }
 
       for(let tgl = 1; tgl <= jumlahHari; tgl++){
-        const date = new Date(tahun, bulan, tgl);
+        const date = new Date(tahunTampil, bulanTampil, tgl);
         const keyTanggal = formatKey(date);
 
         const day = document.createElement("div");
@@ -586,8 +726,8 @@ body.offline-padding{
 
         if(
           tgl === sekarang.getDate() &&
-          bulan === sekarang.getMonth() &&
-          tahun === sekarang.getFullYear()
+          bulanTampil === sekarang.getMonth() &&
+          tahunTampil === sekarang.getFullYear()
         ){
           day.classList.add("today");
         }
@@ -637,12 +777,41 @@ body.offline-padding{
       }
     }
 
-    ambilDataSpreadsheet();
+    /* =======================================================
+       10.9 TOMBOL SEGITIGA PINDAH BULAN
+    ======================================================== */
+    document.getElementById("prevMonthBtn").addEventListener("click", function() {
+      bulanTampil--;
 
+      if (bulanTampil < 0) {
+        bulanTampil = 11;
+        tahunTampil--;
+      }
+
+      buatKalender();
+    });
+
+    document.getElementById("nextMonthBtn").addEventListener("click", function() {
+      bulanTampil++;
+
+      if (bulanTampil > 11) {
+        bulanTampil = 0;
+        tahunTampil++;
+      }
+
+      buatKalender();
+    });
+
+    /* =======================================================
+       10.10 DAFTARKAN SERVICE WORKER PWA
+    ======================================================== */
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("sw.js");
     }
 
+    /* =======================================================
+       10.11 TOMBOL INSTALL APLIKASI
+    ======================================================== */
     let deferredPrompt;
     const installBtn = document.getElementById("installBtn");
 
@@ -661,22 +830,32 @@ body.offline-padding{
         deferredPrompt = null;
       }
     });
+
+    /* =======================================================
+       10.12 BAR STATUS ONLINE / OFFLINE
+    ======================================================== */
     function updateStatusOnline() {
-  const offlineBar = document.getElementById("offlineBar");
+      const offlineBar = document.getElementById("offlineBar");
 
-  if (!navigator.onLine) {
-    offlineBar.style.display = "block";
-    document.body.classList.add("offline-padding");
-  } else {
-    offlineBar.style.display = "none";
-    document.body.classList.remove("offline-padding");
-  }
-}
+      if (!navigator.onLine) {
+        offlineBar.style.display = "block";
+        document.body.classList.add("offline-padding");
+      } else {
+        offlineBar.style.display = "none";
+        document.body.classList.remove("offline-padding");
+      }
+    }
 
-window.addEventListener("online", updateStatusOnline);
-window.addEventListener("offline", updateStatusOnline);
+    window.addEventListener("online", updateStatusOnline);
+    window.addEventListener("offline", updateStatusOnline);
 
-updateStatusOnline();
+    updateStatusOnline();
+
+    /* =======================================================
+       10.13 JALANKAN APLIKASI SAAT HALAMAN DIBUKA
+    ======================================================== */
+    ambilDataSpreadsheet();
+
   </script>
 
 </body>
