@@ -256,62 +256,86 @@
       return y + "-" + m + "-" + d;
     }
 
-    function ambilDataSpreadsheet() {
+    function normalisasiTanggal(value) {
+      value = String(value).trim();
 
-  const callbackName = "terimaDataAbsen";
-
-  window[callbackName] = function(data) {
-
-    dataAbsen = {};
-
-    data.forEach(function(item) {
-
-      const nama = String(item.nama).trim();
-      const tanggal = String(item.tanggal).trim();
-      const status = String(item.status).trim();
-
-      if (nama === namaSaya) {
-        dataAbsen[tanggal] = status;
+      if (/^\d{4}-\d{2}-\d{2}$/.test(value)) {
+        return value;
       }
 
-    });
+      if (/^\d{1,2}\/\d{1,2}\/\d{4}$/.test(value)) {
+        const p = value.split("/");
+        const d = p[0].padStart(2, "0");
+        const m = p[1].padStart(2, "0");
+        const y = p[2];
+        return y + "-" + m + "-" + d;
+      }
 
-    console.log("Data dari spreadsheet:", dataAbsen);
+      return value;
+    }
 
-    buatKalender();
+    function ambilDataSpreadsheet() {
+      const callbackName = "terimaDataAbsen_" + Date.now();
 
-    document.getElementById("hasil").innerHTML =
-      "Data kalender berhasil dimuat";
+      window[callbackName] = function(data) {
+        dataAbsen = {};
 
-  };
+        let jumlahDataCocok = 0;
 
-  const oldScript = document.getElementById("jsonpDataAbsen");
+        data.forEach(function(item) {
+          const nama = String(item.nama).trim().toUpperCase();
+          const tanggal = normalisasiTanggal(item.tanggal);
+          const status = String(item.status).trim();
 
-  if (oldScript) {
-    oldScript.remove();
-  }
+          if (nama === namaSaya.toUpperCase()) {
+            dataAbsen[tanggal] = status;
+            jumlahDataCocok++;
+          }
+        });
 
-  const script = document.createElement("script");
-  script.id = "jsonpDataAbsen";
-  script.src =
-    scriptURL +
-    "?callback=" +
-    callbackName +
-    "&v=" +
-    new Date().getTime();
+        console.log("Data spreadsheet asli:", data);
+        console.log("Data kalender:", dataAbsen);
 
-  script.onerror = function() {
-    document.getElementById("hasil").innerHTML =
-      "Gagal mengambil data kalender";
-  };
+        buatKalender();
 
-  document.body.appendChild(script);
+        document.getElementById("hasil").innerHTML =
+          "Data kalender dimuat : " + jumlahDataCocok + " data";
 
-}
+        delete window[callbackName];
 
-    function ambilStatusTanggal(date){
+        const scriptLama = document.getElementById("jsonpDataAbsen");
+        if (scriptLama) {
+          scriptLama.remove();
+        }
+      };
+
+      const oldScript = document.getElementById("jsonpDataAbsen");
+
+      if (oldScript) {
+        oldScript.remove();
+      }
+
+      const script = document.createElement("script");
+      script.id = "jsonpDataAbsen";
+      script.src =
+        scriptURL +
+        "?callback=" +
+        callbackName +
+        "&v=" +
+        Date.now();
+
+      script.onerror = function() {
+        document.getElementById("hasil").innerHTML =
+          "Gagal mengambil data kalender";
+        buatKalender();
+      };
+
+      document.body.appendChild(script);
+    }
+
+    function ambilStatusTanggal(date) {
       const key = formatKey(date);
-      return dataAbsen[key];
+      return dataAbsen[key] || "";
     }
 
     function absen(status) {
@@ -347,83 +371,83 @@
     }
 
     function buatKalender(){
-  const calendar = document.getElementById("calendar");
-  calendar.innerHTML = "";
+      const calendar = document.getElementById("calendar");
+      calendar.innerHTML = "";
 
-  const namaBulan = new Date(tahun, bulan).toLocaleDateString("id-ID", {
-    month: "long",
-    year: "numeric"
-  });
+      const namaBulan = new Date(tahun, bulan).toLocaleDateString("id-ID", {
+        month: "long",
+        year: "numeric"
+      });
 
-  document.getElementById("calendarTitle").textContent = namaBulan;
+      document.getElementById("calendarTitle").textContent = namaBulan;
 
-  const hari = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
+      const hari = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
 
-  hari.forEach(h => {
-    const div = document.createElement("div");
-    div.className = "day-name";
-    div.textContent = h;
-    calendar.appendChild(div);
-  });
+      hari.forEach(h => {
+        const div = document.createElement("div");
+        div.className = "day-name";
+        div.textContent = h;
+        calendar.appendChild(div);
+      });
 
-  const hariPertama = new Date(tahun, bulan, 1).getDay();
-  const jumlahHari = new Date(tahun, bulan + 1, 0).getDate();
+      const hariPertama = new Date(tahun, bulan, 1).getDay();
+      const jumlahHari = new Date(tahun, bulan + 1, 0).getDate();
 
-  for(let i = 0; i < hariPertama; i++){
-    const kosong = document.createElement("div");
-    calendar.appendChild(kosong);
-  }
-
-  for(let tgl = 1; tgl <= jumlahHari; tgl++){
-    const date = new Date(tahun, bulan, tgl);
-    const keyTanggal = formatKey(date);
-
-    const day = document.createElement("div");
-    day.className = "day";
-
-    if(
-      tgl === sekarang.getDate() &&
-      bulan === sekarang.getMonth() &&
-      tahun === sekarang.getFullYear()
-    ){
-      day.classList.add("today");
-    }
-
-    if(keyTanggal === tanggalDipilih){
-      day.classList.add("selected");
-    }
-
-    day.innerHTML = "<div>" + tgl + "</div>";
-
-    day.addEventListener("click", function() {
-      tanggalDipilih = keyTanggal;
-
-      document.getElementById("hasil").innerHTML =
-        "Tanggal dipilih : " + tanggalDipilih;
-
-      buatKalender();
-    });
-
-    const status = ambilStatusTanggal(date);
-
-    if(status){
-      const dot = document.createElement("div");
-      dot.className = "dot";
-
-      if(status === "Masuk"){
-        dot.classList.add("dot-masuk");
-      } else if(status === "Setengah Hari"){
-        dot.classList.add("dot-setengah");
-      } else if(status === "Tidak Masuk"){
-        dot.classList.add("dot-tidak");
+      for(let i = 0; i < hariPertama; i++){
+        const kosong = document.createElement("div");
+        calendar.appendChild(kosong);
       }
 
-      day.appendChild(dot);
-    }
+      for(let tgl = 1; tgl <= jumlahHari; tgl++){
+        const date = new Date(tahun, bulan, tgl);
+        const keyTanggal = formatKey(date);
 
-    calendar.appendChild(day);
-  }
-}
+        const day = document.createElement("div");
+        day.className = "day";
+
+        if(
+          tgl === sekarang.getDate() &&
+          bulan === sekarang.getMonth() &&
+          tahun === sekarang.getFullYear()
+        ){
+          day.classList.add("today");
+        }
+
+        if(keyTanggal === tanggalDipilih){
+          day.classList.add("selected");
+        }
+
+        day.innerHTML = "<div>" + tgl + "</div>";
+
+        day.addEventListener("click", function() {
+          tanggalDipilih = keyTanggal;
+
+          document.getElementById("hasil").innerHTML =
+            "Tanggal dipilih : " + tanggalDipilih;
+
+          buatKalender();
+        });
+
+        const status = ambilStatusTanggal(date);
+
+        if(status){
+          const dot = document.createElement("div");
+          dot.className = "dot";
+
+          if(status === "Masuk"){
+            dot.classList.add("dot-masuk");
+          } else if(status === "Setengah Hari"){
+            dot.classList.add("dot-setengah");
+          } else if(status === "Tidak Masuk"){
+            dot.classList.add("dot-tidak");
+          }
+
+          day.appendChild(dot);
+        }
+
+        calendar.appendChild(day);
+      }
+    }
 
     ambilDataSpreadsheet();
 
