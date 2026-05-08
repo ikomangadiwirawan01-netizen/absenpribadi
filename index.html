@@ -89,6 +89,11 @@
       border-radius:8px;
     }
 
+    .day-name.minggu-title{
+      background:#fee2e2;
+      color:#dc2626;
+    }
+
     .day{
       min-height:65px;
       border:1px solid #ddd;
@@ -115,6 +120,23 @@
       background:#dbeafe !important;
       border:3px solid #2563eb !important;
       font-weight:bold;
+    }
+
+    .minggu{
+      background:#fee2e2 !important;
+      color:#dc2626;
+      border:1px solid #fca5a5;
+      font-weight:bold;
+    }
+
+    .minggu.selected{
+      background:#dbeafe !important;
+      color:#111827;
+      border:3px solid #2563eb !important;
+    }
+
+    .minggu.today{
+      border:3px solid #dc2626;
     }
 
     .dot{
@@ -150,6 +172,85 @@
       display:none;
       background:#333;
       margin-top:20px;
+    }
+
+    .modal-overlay{
+      display:none;
+      position:fixed;
+      inset:0;
+      background:rgba(0,0,0,0.45);
+      z-index:9999;
+      justify-content:center;
+      align-items:center;
+      padding:20px;
+    }
+
+    .modal-box{
+      background:white;
+      width:100%;
+      max-width:380px;
+      border-radius:18px;
+      padding:25px;
+      text-align:center;
+      box-shadow:0 15px 40px rgba(0,0,0,0.25);
+      animation:modalMasuk 0.2s ease;
+    }
+
+    .modal-icon{
+      width:55px;
+      height:55px;
+      background:#fff3cd;
+      color:#b45309;
+      border-radius:50%;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:30px;
+      margin:0 auto 15px auto;
+      font-weight:bold;
+    }
+
+    .modal-box h2{
+      margin:0 0 10px 0;
+      font-size:22px;
+    }
+
+    .modal-box p{
+      margin:0 0 20px 0;
+      color:#555;
+      line-height:1.5;
+    }
+
+    .modal-actions{
+      display:flex;
+      gap:10px;
+      justify-content:center;
+    }
+
+    .modal-actions button{
+      width:140px;
+      height:45px;
+      font-size:16px;
+      border-radius:10px;
+    }
+
+    .btn-batal{
+      background:#6b7280;
+    }
+
+    .btn-lanjut{
+      background:#2563eb;
+    }
+
+    @keyframes modalMasuk{
+      from{
+        transform:scale(0.9);
+        opacity:0;
+      }
+      to{
+        transform:scale(1);
+        opacity:1;
+      }
     }
 
     @media(max-width:600px){
@@ -195,6 +296,14 @@
         font-size:13px;
         padding:7px 0;
       }
+
+      .modal-actions{
+        flex-direction:column;
+      }
+
+      .modal-actions button{
+        width:100%;
+      }
     }
   </style>
 </head>
@@ -221,10 +330,26 @@
       <span><i class="mini-dot" style="background:green"></i> Masuk</span>
       <span><i class="mini-dot" style="background:orange"></i> Setengah Hari</span>
       <span><i class="mini-dot" style="background:red"></i> Tidak Masuk</span>
+      <span><i class="mini-dot" style="background:#fee2e2; border:1px solid #dc2626"></i> Hari Minggu</span>
     </div>
   </div>
 
   <button id="installBtn">Install Aplikasi</button>
+
+  <div class="modal-overlay" id="modalTanggal">
+    <div class="modal-box">
+      <div class="modal-icon">!</div>
+      <h2>Konfirmasi Tanggal</h2>
+      <p id="modalText">
+        Anda memilih tanggal selain hari ini.
+      </p>
+
+      <div class="modal-actions">
+        <button class="btn-batal" onclick="batalPilihTanggal()">Batal</button>
+        <button class="btn-lanjut" onclick="lanjutPilihTanggal()">Lanjutkan</button>
+      </div>
+    </div>
+  </div>
 
   <script>
     const scriptURL = "https://script.google.com/macros/s/AKfycbwgA5-L3qyLPOl5L_vikrd8AfMDj95UZcFMhdJLWHxxGWdcfMp0qXQtLPYszWdw5XvX/exec";
@@ -236,6 +361,7 @@
 
     let dataAbsen = {};
     let tanggalDipilih = "";
+    let tanggalPending = "";
 
     document.getElementById("tanggal").textContent =
       sekarang.toLocaleDateString("id-ID", {
@@ -253,77 +379,104 @@
     }
 
     function normalisasiTanggal(value) {
-  value = String(value || "").trim();
+      value = String(value || "").trim();
 
-  // Ambil pola tanggal 2026-05-01 dari teks apa pun
-  const matchFormatStrip = value.match(/(\d{4})-(\d{2})-(\d{2})/);
-  if (matchFormatStrip) {
-    return matchFormatStrip[1] + "-" + matchFormatStrip[2] + "-" + matchFormatStrip[3];
-  }
+      const matchFormatStrip = value.match(/(\d{4})-(\d{2})-(\d{2})/);
+      if (matchFormatStrip) {
+        return matchFormatStrip[1] + "-" + matchFormatStrip[2] + "-" + matchFormatStrip[3];
+      }
 
-  // Ambil pola tanggal 01/05/2026 atau 1/5/2026
-  const matchFormatSlash = value.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
-  if (matchFormatSlash) {
-    const d = matchFormatSlash[1].padStart(2, "0");
-    const m = matchFormatSlash[2].padStart(2, "0");
-    const y = matchFormatSlash[3];
-    return y + "-" + m + "-" + d;
-  }
+      const matchFormatSlash = value.match(/(\d{1,2})\/(\d{1,2})\/(\d{4})/);
+      if (matchFormatSlash) {
+        const d = matchFormatSlash[1].padStart(2, "0");
+        const m = matchFormatSlash[2].padStart(2, "0");
+        const y = matchFormatSlash[3];
+        return y + "-" + m + "-" + d;
+      }
 
-  return value;
-}
+      return value;
+    }
+
+    function tampilModalTanggal(tanggal) {
+      tanggalPending = tanggal;
+
+      document.getElementById("modalText").innerHTML =
+        "Anda memilih tanggal <b>" + tanggal + "</b>, bukan tanggal hari ini.<br><br>Lanjutkan absen untuk tanggal ini?";
+
+      document.getElementById("modalTanggal").style.display = "flex";
+    }
+
+    function batalPilihTanggal() {
+      tanggalPending = "";
+      document.getElementById("modalTanggal").style.display = "none";
+    }
+
+    function lanjutPilihTanggal() {
+      tanggalDipilih = tanggalPending;
+      tanggalPending = "";
+
+      document.getElementById("modalTanggal").style.display = "none";
+
+      document.getElementById("hasil").innerHTML =
+        "Tanggal dipilih : " + tanggalDipilih;
+
+      buatKalender();
+    }
 
     function ambilDataSpreadsheet() {
-  const callbackName = "terimaDataAbsen_" + Date.now();
+      const callbackName = "terimaDataAbsen_" + Date.now();
 
-  window[callbackName] = function(data) {
-    dataAbsen = {};
+      window[callbackName] = function(data) {
+        dataAbsen = {};
 
-    let jumlahDataCocok = 0;
+        let jumlahDataCocok = 0;
 
-    data.forEach(function(item) {
-      const nama = String(item.nama || "").trim().toUpperCase();
-      const tanggal = normalisasiTanggal(item.tanggal);
-      const status = String(item.status || "").trim().toLowerCase();
+        data.forEach(function(item) {
+          const nama = String(item.nama || "").trim().toUpperCase();
+          const tanggal = normalisasiTanggal(item.tanggal);
+          const status = String(item.status || "").trim().toLowerCase();
 
-      if (nama === namaSaya.toUpperCase() && tanggal) {
-        dataAbsen[tanggal] = status;
-        jumlahDataCocok++;
+          if (nama === namaSaya.toUpperCase() && tanggal) {
+            dataAbsen[tanggal] = status;
+            jumlahDataCocok++;
+          }
+        });
+
+        buatKalender();
+
+        document.getElementById("hasil").innerHTML =
+          "Data kalender dimuat : " + jumlahDataCocok + " data";
+
+        delete window[callbackName];
+
+        const scriptLama = document.getElementById("jsonpDataAbsen");
+        if (scriptLama) {
+          scriptLama.remove();
+        }
+      };
+
+      const oldScript = document.getElementById("jsonpDataAbsen");
+
+      if (oldScript) {
+        oldScript.remove();
       }
-    });
 
-    buatKalender();
+      const script = document.createElement("script");
+      script.id = "jsonpDataAbsen";
+      script.src =
+        scriptURL +
+        "?callback=" +
+        callbackName +
+        "&v=" +
+        Date.now();
 
-    document.getElementById("hasil").innerHTML =
-      "Data kalender dimuat : " + jumlahDataCocok + " data";
-  };
+      script.onerror = function() {
+        document.getElementById("hasil").innerHTML =
+          "Gagal mengambil data kalender";
+        buatKalender();
+      };
 
-  const oldScript = document.getElementById("jsonpDataAbsen");
-  if (oldScript) {
-    oldScript.remove();
-  }
-
-  const script = document.createElement("script");
-  script.id = "jsonpDataAbsen";
-  script.src =
-    scriptURL +
-    "?callback=" +
-    callbackName +
-    "&v=" +
-    Date.now();
-
-  script.onerror = function() {
-    document.getElementById("hasil").innerHTML =
-      "Gagal mengambil data kalender";
-    buatKalender();
-  };
-
-  document.body.appendChild(script);
-}
-
-    function ambilStatusTanggal(date) {
-      const key = formatKey(date);
-      return dataAbsen[key] || "";
+      document.body.appendChild(script);
     }
 
     function absen(status) {
@@ -371,9 +524,14 @@
 
       const hari = ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"];
 
-      hari.forEach(function(h) {
+      hari.forEach(function(h, index) {
         const div = document.createElement("div");
         div.className = "day-name";
+
+        if (index === 0) {
+          div.classList.add("minggu-title");
+        }
+
         div.textContent = h;
         calendar.appendChild(div);
       });
@@ -393,6 +551,10 @@
         const day = document.createElement("div");
         day.className = "day";
 
+        if (date.getDay() === 0) {
+          day.classList.add("minggu");
+        }
+
         if(
           tgl === sekarang.getDate() &&
           bulan === sekarang.getMonth() &&
@@ -408,6 +570,13 @@
         day.innerHTML = "<div>" + tgl + "</div>";
 
         day.addEventListener("click", function() {
+          const tanggalHariIni = formatKey(sekarang);
+
+          if (keyTanggal !== tanggalHariIni) {
+            tampilModalTanggal(keyTanggal);
+            return;
+          }
+
           tanggalDipilih = keyTanggal;
 
           document.getElementById("hasil").innerHTML =
@@ -418,22 +587,22 @@
 
         const status = String(dataAbsen[keyTanggal] || "").trim().toLowerCase();
 
-if(status){
-  const dot = document.createElement("div");
-  dot.className = "dot";
+        if(status){
+          const dot = document.createElement("div");
+          dot.className = "dot";
 
-  if(status.includes("setengah")){
-    dot.style.background = "orange";
-  } else if(status.includes("tidak")){
-    dot.style.background = "red";
-  } else if(status.includes("masuk")){
-    dot.style.background = "green";
-  } else {
-    dot.style.background = "blue";
-  }
+          if(status.includes("setengah")){
+            dot.style.background = "orange";
+          } else if(status.includes("tidak")){
+            dot.style.background = "red";
+          } else if(status.includes("masuk")){
+            dot.style.background = "green";
+          } else {
+            dot.style.background = "blue";
+          }
 
-  day.appendChild(dot);
-}
+          day.appendChild(dot);
+        }
 
         calendar.appendChild(day);
       }
