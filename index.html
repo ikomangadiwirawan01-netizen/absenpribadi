@@ -17,73 +17,33 @@
   ======================================================== -->
   <style>
     /* =======================================================
-       2.1 STYLE BODY UTAMA
+       2.1 STYLE DASAR
     ======================================================== */
+    *{
+      box-sizing:border-box;
+    }
+
     body{
       font-family: Arial, sans-serif;
       text-align:center;
       margin:0;
-      padding:20px;
-      background:#ffffff;
+      padding:0;
+      background:#f7faf8;
+      color:#1f2937;
     }
 
     body.offline-padding{
-      padding-top:60px;
-    }
-
-    h1{
-      margin-top:20px;
-      margin-bottom:15px;
-    }
-
-    /* =======================================================
-       2.2 STYLE TANGGAL HARI INI
-    ======================================================== */
-    #tanggal{
-      display:inline-block;
-      background:#f1f1f1;
-      padding:12px 22px;
-      border-radius:10px;
-      font-size:22px;
-      color:#333;
-      font-weight:bold;
-      margin-bottom:15px;
-    }
-
-    /* =======================================================
-       2.3 STYLE TOMBOL ABSEN
-    ======================================================== */
-    .button-area{
-      display:flex;
-      justify-content:center;
-      gap:18px;
-      flex-wrap:wrap;
-      margin-bottom:15px;
+      padding-top:48px;
     }
 
     button{
-      width:220px;
-      height:60px;
-      font-size:20px;
       border:none;
-      border-radius:10px;
       cursor:pointer;
-      color:white;
-    }
-
-    .masuk{ background:green; }
-    .setengah{ background:orange; }
-    .tidak{ background:red; }
-
-    #hasil{
-      margin-top:10px;
-      color:#333;
-      min-height:30px;
-      font-weight:bold;
+      font-family:inherit;
     }
 
     /* =======================================================
-       2.4 STYLE BAR OFFLINE
+       2.2 BAR OFFLINE
     ======================================================== */
     .offline-bar{
       display:none;
@@ -94,49 +54,316 @@
       background:#dc2626;
       color:white;
       padding:12px;
-      font-size:16px;
+      font-size:15px;
       font-weight:bold;
       z-index:10000;
       text-align:center;
     }
 
     /* =======================================================
-       2.5 STYLE KALENDER
+       2.3 HERO HEADER HIJAU
+    ======================================================== */
+    .hero{
+      position:relative;
+      background:linear-gradient(135deg,#006b2f,#07963f,#0fb14d);
+      color:white;
+      padding:28px 18px 95px 18px;
+      border-bottom-left-radius:42px;
+      border-bottom-right-radius:42px;
+      overflow:hidden;
+    }
+
+    .hero::before{
+      content:"";
+      position:absolute;
+      width:260px;
+      height:260px;
+      border-radius:50%;
+      background:rgba(255,255,255,0.08);
+      top:-80px;
+      left:-80px;
+    }
+
+    .hero::after{
+      content:"";
+      position:absolute;
+      width:230px;
+      height:230px;
+      border-radius:50%;
+      background:rgba(255,255,255,0.08);
+      right:-80px;
+      bottom:-70px;
+    }
+
+    .hero-top{
+      display:none;
+    }
+
+    .hero-title{
+      position:relative;
+      z-index:2;
+      margin:18px auto 0 auto;
+    }
+
+    .hero-title h1{
+      margin:0;
+      font-size:54px;
+      font-weight:800;
+      letter-spacing:-1px;
+      text-shadow:0 3px 10px rgba(0,0,0,0.18);
+    }
+
+    .hero-title p{
+      margin:10px 0 0 0;
+      font-size:21px;
+      opacity:0.95;
+    }
+
+    /* =======================================================
+       2.4 KONTAINER UTAMA
+    ======================================================== */
+    .app-container{
+      max-width:980px;
+      margin:-65px auto 30px auto;
+      padding:0 18px 30px 18px;
+      position:relative;
+      z-index:3;
+    }
+
+    /* =======================================================
+       2.5 KARTU TANGGAL HARI INI
+    ======================================================== */
+    .today-card{
+      background:white;
+      border-radius:28px;
+      padding:24px;
+      box-shadow:0 15px 35px rgba(0,0,0,0.12);
+      display:flex;
+      align-items:center;
+      gap:18px;
+      text-align:left;
+      margin-bottom:28px;
+    }
+
+    .today-icon{
+      width:58px;
+      height:58px;
+      border-radius:16px;
+      background:#e8f7ef;
+      color:#0a8f3c;
+      font-size:32px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+    }
+
+    #tanggal{
+      font-size:25px;
+      font-weight:800;
+      color:#2d2d2d;
+      margin-bottom:5px;
+    }
+
+    .today-subtitle{
+      font-size:18px;
+      color:#6b7280;
+    }
+
+    /* =======================================================
+       2.6 TOMBOL ABSEN MODEL KARTU
+    ======================================================== */
+    .button-area{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:24px;
+      margin-bottom:28px;
+    }
+
+    .absen-card{
+      min-height:190px;
+      border-radius:24px;
+      color:white;
+      padding:25px;
+      box-shadow:0 18px 32px rgba(0,0,0,0.16);
+      display:flex;
+      flex-direction:column;
+      align-items:center;
+      justify-content:center;
+      transition:transform 0.15s ease, box-shadow 0.15s ease;
+    }
+
+    .absen-card:hover{
+      transform:translateY(-3px);
+      box-shadow:0 22px 38px rgba(0,0,0,0.2);
+    }
+
+    .absen-icon{
+      width:70px;
+      height:70px;
+      border-radius:50%;
+      background:white;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:38px;
+      font-weight:bold;
+      margin-bottom:16px;
+    }
+
+    .absen-title{
+      font-size:25px;
+      font-weight:800;
+      margin-bottom:8px;
+    }
+
+    .absen-desc{
+      font-size:17px;
+      opacity:0.95;
+    }
+
+    .masuk{
+      background:linear-gradient(135deg,#19b34a,#008b2f);
+    }
+
+    .masuk .absen-icon{
+      color:#07963f;
+    }
+
+    .setengah{
+      background:linear-gradient(135deg,#ffb31a,#fb8c00);
+    }
+
+    .setengah .absen-icon{
+      color:#fb8c00;
+    }
+
+    .tidak{
+      background:linear-gradient(135deg,#ff4141,#ef1717);
+    }
+
+    .tidak .absen-icon{
+      color:#ef1717;
+    }
+
+    /* =======================================================
+       2.7 STATUS DATA KALENDER
+    ======================================================== */
+    .status-card{
+      background:#eaffef;
+      border:1px solid #b7efc4;
+      border-radius:20px;
+      padding:18px 22px;
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:15px;
+      margin-bottom:28px;
+      text-align:left;
+    }
+
+    .status-left{
+      display:flex;
+      align-items:center;
+      gap:15px;
+    }
+
+    .status-icon{
+      width:50px;
+      height:50px;
+      border-radius:50%;
+      background:#0a9b3e;
+      color:white;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:28px;
+      font-weight:bold;
+      flex-shrink:0;
+    }
+
+    #hasil{
+      margin:0;
+      color:#0b7f31;
+      font-size:22px;
+      font-weight:800;
+    }
+
+    #lastUpdate{
+      margin-top:5px;
+      color:#6b7280;
+      font-size:16px;
+    }
+
+    .refresh-btn{
+      width:58px;
+      height:58px;
+      border-radius:18px;
+      background:#eaffef;
+      border:1px solid #b7efc4;
+      color:#0a8f3c;
+      font-size:30px;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      flex-shrink:0;
+    }
+
+    /* =======================================================
+       2.8 KALENDER
     ======================================================== */
     .calendar-box{
-      max-width:900px;
-      margin:20px auto;
-      border:2px solid #ddd;
-      border-radius:15px;
-      padding:20px;
+      background:white;
+      border-radius:28px;
+      padding:26px;
+      box-shadow:0 15px 35px rgba(0,0,0,0.10);
+      border:1px solid #e5e7eb;
     }
 
     .calendar-header{
       display:flex;
       align-items:center;
       justify-content:space-between;
-      margin-bottom:15px;
+      margin-bottom:24px;
       gap:15px;
     }
 
     .calendar-title{
-      font-size:24px;
-      font-weight:bold;
+      font-size:36px;
+      font-weight:800;
       flex:1;
       text-align:center;
+    }
+
+    .nav-bulan{
+      width:58px;
+      height:58px;
+      border-radius:50%;
+      background:#fee2e2;
+      color:#dc2626;
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      font-size:34px;
+      font-weight:bold;
+    }
+
+    .nav-bulan:hover{
+      background:#fecaca;
     }
 
     .calendar{
       display:grid;
       grid-template-columns:repeat(7, 1fr);
-      gap:8px;
+      gap:10px;
     }
 
     .day-name{
-      font-weight:bold;
-      padding:10px 0;
-      background:#f3f3f3;
-      border-radius:8px;
+      font-weight:800;
+      padding:13px 0;
+      background:#f3f4f6;
+      border-radius:12px;
+      font-size:17px;
     }
 
     .day-name.minggu-title{
@@ -145,128 +372,103 @@
     }
 
     .day{
-      min-height:65px;
-      border:1px solid #ddd;
-      border-radius:10px;
+      min-height:78px;
+      border:1px solid #dedede;
+      border-radius:14px;
       display:flex;
       flex-direction:column;
       justify-content:center;
       align-items:center;
-      font-size:18px;
+      font-size:23px;
       background:#fff;
       cursor:pointer;
+      transition:0.15s ease;
     }
 
     .day:hover{
-      background:#f5fff5;
+      background:#f0fff4;
     }
 
     .today{
-      border:3px solid #008000;
-      font-weight:bold;
+      border:4px solid #008000;
+      font-weight:800;
     }
 
     .selected{
       background:#dbeafe !important;
-      border:3px solid #2563eb !important;
-      font-weight:bold;
+      border:4px solid #2563eb !important;
+      font-weight:800;
     }
 
     .minggu{
       background:#fee2e2 !important;
       color:#dc2626;
       border:1px solid #fca5a5;
-      font-weight:bold;
+      font-weight:800;
     }
 
     .minggu.selected{
       background:#dbeafe !important;
       color:#111827;
-      border:3px solid #2563eb !important;
+      border:4px solid #2563eb !important;
     }
 
     .minggu.today{
-      border:3px solid #dc2626;
+      border:4px solid #dc2626;
     }
 
-    /* =======================================================
-       2.6 STYLE TITIK WARNA STATUS ABSEN
-    ======================================================== */
     .dot{
-      width:13px;
-      height:13px;
+      width:16px;
+      height:16px;
       border-radius:50%;
       margin-top:8px;
     }
 
+    /* =======================================================
+       2.9 LEGENDA
+    ======================================================== */
     .legend{
-      margin-top:18px;
+      margin-top:22px;
+      padding:14px;
+      border:1px solid #e5e7eb;
+      border-radius:14px;
       display:flex;
       justify-content:center;
-      gap:20px;
+      gap:28px;
       flex-wrap:wrap;
       font-size:15px;
+      color:#5f6368;
     }
 
     .legend span{
       display:inline-flex;
       align-items:center;
-      gap:6px;
+      gap:8px;
     }
 
     .mini-dot{
-      width:12px;
-      height:12px;
+      width:14px;
+      height:14px;
       border-radius:50%;
       display:inline-block;
     }
 
     /* =======================================================
-       2.7 STYLE TOMBOL SEGITIGA PINDAH BULAN
-    ======================================================== */
-    .nav-bulan{
-      width:42px;
-      height:42px;
-      border:none;
-      background:transparent;
-      cursor:pointer;
-      position:relative;
-      flex-shrink:0;
-    }
-
-    .nav-bulan:hover{
-      transform:scale(1.08);
-    }
-
-    .nav-bulan::before{
-      content:"";
-      display:block;
-      width:0;
-      height:0;
-      margin:auto;
-      border-top:12px solid transparent;
-      border-bottom:12px solid transparent;
-    }
-
-    .nav-kiri::before{
-      border-right:18px solid #ef4444;
-    }
-
-    .nav-kanan::before{
-      border-left:18px solid #ef4444;
-    }
-
-    /* =======================================================
-       2.8 STYLE TOMBOL INSTALL PWA
+       2.10 TOMBOL INSTALL
     ======================================================== */
     #installBtn{
       display:none;
       background:#333;
-      margin-top:20px;
+      color:white;
+      width:220px;
+      height:50px;
+      border-radius:10px;
+      margin-top:24px;
+      font-size:16px;
     }
 
     /* =======================================================
-       2.9 STYLE MODAL KONFIRMASI TANGGAL
+       2.11 MODAL KONFIRMASI TANGGAL
     ======================================================== */
     .modal-overlay{
       display:none;
@@ -282,31 +484,31 @@
     .modal-box{
       background:white;
       width:100%;
-      max-width:380px;
-      border-radius:18px;
-      padding:25px;
+      max-width:390px;
+      border-radius:22px;
+      padding:26px;
       text-align:center;
       box-shadow:0 15px 40px rgba(0,0,0,0.25);
       animation:modalMasuk 0.2s ease;
     }
 
     .modal-icon{
-      width:55px;
-      height:55px;
+      width:58px;
+      height:58px;
       background:#fff3cd;
       color:#b45309;
       border-radius:50%;
       display:flex;
       align-items:center;
       justify-content:center;
-      font-size:30px;
+      font-size:32px;
       margin:0 auto 15px auto;
       font-weight:bold;
     }
 
     .modal-box h2{
       margin:0 0 10px 0;
-      font-size:22px;
+      font-size:23px;
     }
 
     .modal-box p{
@@ -323,7 +525,8 @@
 
     .modal-actions button{
       width:140px;
-      height:45px;
+      height:46px;
+      color:white;
       font-size:16px;
       border-radius:10px;
     }
@@ -348,50 +551,161 @@
     }
 
     /* =======================================================
-       2.10 STYLE RESPONSIVE UNTUK HP
+       2.12 RESPONSIVE COMPACT UNTUK HP
     ======================================================== */
-    @media(max-width:600px){
-      body{
-        padding:15px;
+    @media(max-width:700px){
+      .hero{
+        padding:18px 14px 70px 14px;
+        border-bottom-left-radius:28px;
+        border-bottom-right-radius:28px;
       }
 
-      h1{
-        font-size:28px;
+      .hero-title{
+        margin-top:10px;
+      }
+
+      .hero-title h1{
+        font-size:34px;
+      }
+
+      .hero-title p{
+        font-size:14px;
+      }
+
+      .app-container{
+        margin:-48px auto 18px auto;
+        padding:0 10px 20px 10px;
+      }
+
+      .today-card{
+        padding:14px;
+        border-radius:20px;
+        margin-bottom:16px;
+      }
+
+      .today-icon{
+        width:44px;
+        height:44px;
+        font-size:24px;
+        border-radius:12px;
       }
 
       #tanggal{
-        font-size:18px;
+        font-size:17px;
+      }
+
+      .today-subtitle{
+        font-size:13px;
       }
 
       .button-area{
-        flex-direction:column;
-        align-items:center;
+        grid-template-columns:1fr;
         gap:10px;
+        margin-bottom:16px;
       }
 
-      button{
-        width:100%;
-        max-width:330px;
-        height:55px;
-        font-size:18px;
+      .absen-card{
+        min-height:76px;
+        border-radius:16px;
+        flex-direction:row;
+        justify-content:center;
+        gap:14px;
+        padding:14px;
+      }
+
+      .absen-icon{
+        width:42px;
+        height:42px;
+        font-size:24px;
+        margin-bottom:0;
+      }
+
+      .absen-title{
+        font-size:20px;
+        margin-bottom:0;
+      }
+
+      .absen-desc{
+        font-size:13px;
+      }
+
+      .status-card{
+        padding:12px;
+        border-radius:16px;
+        margin-bottom:16px;
+      }
+
+      .status-icon{
+        width:40px;
+        height:40px;
+        font-size:22px;
+      }
+
+      #hasil{
+        font-size:17px;
+      }
+
+      #lastUpdate{
+        font-size:12px;
+      }
+
+      .refresh-btn{
+        width:42px;
+        height:42px;
+        font-size:22px;
+        border-radius:14px;
       }
 
       .calendar-box{
-        padding:10px;
+        padding:12px;
+        border-radius:20px;
+      }
+
+      .calendar-header{
+        margin-bottom:14px;
+      }
+
+      .calendar-title{
+        font-size:24px;
+      }
+
+      .nav-bulan{
+        width:38px;
+        height:38px;
+        font-size:26px;
       }
 
       .calendar{
         gap:5px;
       }
 
-      .day{
-        min-height:48px;
-        font-size:14px;
+      .day-name{
+        font-size:12px;
+        padding:8px 0;
+        border-radius:9px;
       }
 
-      .day-name{
-        font-size:13px;
-        padding:7px 0;
+      .day{
+        min-height:52px;
+        font-size:17px;
+        border-radius:10px;
+      }
+
+      .dot{
+        width:11px;
+        height:11px;
+        margin-top:5px;
+      }
+
+      .legend{
+        gap:10px;
+        font-size:11px;
+        padding:10px;
+      }
+
+      .mini-dot{
+        width:11px;
+        height:11px;
       }
 
       .modal-actions{
@@ -400,6 +714,21 @@
 
       .modal-actions button{
         width:100%;
+      }
+    }
+
+    @media(max-width:380px){
+      .day{
+        min-height:46px;
+        font-size:16px;
+      }
+
+      .calendar{
+        gap:4px;
+      }
+
+      .day-name{
+        font-size:11px;
       }
     }
   </style>
@@ -415,57 +744,111 @@
   </div>
 
   <!-- =======================================================
-       BAGIAN 4: JUDUL APLIKASI DAN TANGGAL HARI INI
+       BAGIAN 4: HERO HEADER
   ======================================================== -->
-  <h1>Absen Kerja</h1>
+  <section class="hero">
+    <div class="hero-top"></div>
 
-  <div id="tanggal"></div>
-
-  <!-- =======================================================
-       BAGIAN 5: TOMBOL ABSEN
-  ======================================================== -->
-  <div class="button-area">
-    <button class="masuk" onclick="absen('Masuk')">MASUK</button>
-    <button class="setengah" onclick="absen('Setengah Hari')">SETENGAH HARI</button>
-    <button class="tidak" onclick="absen('Tidak Masuk')">TIDAK MASUK</button>
-  </div>
-
-  <!-- =======================================================
-       BAGIAN 6: STATUS / PESAN HASIL
-  ======================================================== -->
-  <h3 id="hasil">Memuat data kalender...</h3>
-
-  <!-- =======================================================
-       BAGIAN 7: KALENDER ABSEN
-  ======================================================== -->
-  <div class="calendar-box">
-
-    <div class="calendar-header">
-      <button class="nav-bulan nav-kiri" id="prevMonthBtn" type="button" aria-label="Bulan sebelumnya"></button>
-
-      <div class="calendar-title" id="calendarTitle"></div>
-
-      <button class="nav-bulan nav-kanan" id="nextMonthBtn" type="button" aria-label="Bulan berikutnya"></button>
+    <div class="hero-title">
+      <h1>Absen Kerja</h1>
+      <p>Catat kehadiranmu dengan mudah</p>
     </div>
-
-    <div class="calendar" id="calendar"></div>
-
-    <div class="legend">
-      <span><i class="mini-dot" style="background:green"></i> Masuk</span>
-      <span><i class="mini-dot" style="background:orange"></i> Setengah Hari</span>
-      <span><i class="mini-dot" style="background:red"></i> Tidak Masuk</span>
-      <span><i class="mini-dot" style="background:#fee2e2; border:1px solid #dc2626"></i> Hari Minggu</span>
-    </div>
-
-  </div>
+  </section>
 
   <!-- =======================================================
-       BAGIAN 8: TOMBOL INSTALL PWA
+       BAGIAN 5: KONTAINER UTAMA
   ======================================================== -->
-  <button id="installBtn">Install Aplikasi</button>
+  <main class="app-container">
+
+    <!-- =======================================================
+         BAGIAN 5.1: KARTU TANGGAL HARI INI
+    ======================================================== -->
+    <section class="today-card">
+      <div class="today-icon">📅</div>
+
+      <div>
+        <div id="tanggal"></div>
+        <div class="today-subtitle">Selamat bekerja! Tetap semangat 💪</div>
+      </div>
+    </section>
+
+    <!-- =======================================================
+         BAGIAN 5.2: TOMBOL ABSEN
+    ======================================================== -->
+    <section class="button-area">
+      <button class="absen-card masuk" onclick="absen('Masuk')">
+        <div class="absen-icon">✓</div>
+        <div>
+          <div class="absen-title">MASUK</div>
+          <div class="absen-desc">Saya hadir</div>
+        </div>
+      </button>
+
+      <button class="absen-card setengah" onclick="absen('Setengah Hari')">
+        <div class="absen-icon">◔</div>
+        <div>
+          <div class="absen-title">SETENGAH HARI</div>
+          <div class="absen-desc">Kerja setengah hari</div>
+        </div>
+      </button>
+
+      <button class="absen-card tidak" onclick="absen('Tidak Masuk')">
+        <div class="absen-icon">×</div>
+        <div>
+          <div class="absen-title">TIDAK MASUK</div>
+          <div class="absen-desc">Saya tidak hadir</div>
+        </div>
+      </button>
+    </section>
+
+    <!-- =======================================================
+         BAGIAN 5.3: STATUS DATA KALENDER
+    ======================================================== -->
+    <section class="status-card">
+      <div class="status-left">
+        <div class="status-icon">✓</div>
+        <div>
+          <h3 id="hasil">Memuat data kalender...</h3>
+          <div id="lastUpdate">Menghubungkan ke Spreadsheet...</div>
+        </div>
+      </div>
+
+      <button class="refresh-btn" type="button" onclick="ambilDataSpreadsheet()">↻</button>
+    </section>
+
+    <!-- =======================================================
+         BAGIAN 5.4: KALENDER ABSEN
+    ======================================================== -->
+    <section class="calendar-box">
+
+      <div class="calendar-header">
+        <button class="nav-bulan" id="prevMonthBtn" type="button" aria-label="Bulan sebelumnya">‹</button>
+
+        <div class="calendar-title" id="calendarTitle"></div>
+
+        <button class="nav-bulan" id="nextMonthBtn" type="button" aria-label="Bulan berikutnya">›</button>
+      </div>
+
+      <div class="calendar" id="calendar"></div>
+
+      <div class="legend">
+        <span><i class="mini-dot" style="background:green"></i> Masuk</span>
+        <span><i class="mini-dot" style="background:orange"></i> Setengah Hari</span>
+        <span><i class="mini-dot" style="background:red"></i> Tidak Masuk</span>
+        <span><i class="mini-dot" style="background:#fee2e2; border:1px solid #dc2626"></i> Hari Minggu</span>
+      </div>
+
+    </section>
+
+    <!-- =======================================================
+         BAGIAN 5.5: TOMBOL INSTALL PWA
+    ======================================================== -->
+    <button id="installBtn">Install Aplikasi</button>
+
+  </main>
 
   <!-- =======================================================
-       BAGIAN 9: MODAL KONFIRMASI TANGGAL
+       BAGIAN 6: MODAL KONFIRMASI TANGGAL
   ======================================================== -->
   <div class="modal-overlay" id="modalTanggal">
     <div class="modal-box">
@@ -483,12 +866,12 @@
   </div>
 
   <!-- =======================================================
-       BAGIAN 10: JAVASCRIPT UTAMA
+       BAGIAN 7: JAVASCRIPT UTAMA
   ======================================================== -->
   <script>
 
     /* =======================================================
-       10.1 KONFIGURASI APLIKASI
+       7.1 KONFIGURASI APLIKASI
     ======================================================== */
     const scriptURL = "https://script.google.com/macros/s/AKfycbwgA5-L3qyLPOl5L_vikrd8AfMDj95UZcFMhdJLWHxxGWdcfMp0qXQtLPYszWdw5XvX/exec";
     const namaSaya = "MANGADI";
@@ -499,11 +882,11 @@
     let bulanTampil = sekarang.getMonth();
 
     let dataAbsen = {};
-    let tanggalDipilih = "";
+    let tanggalDipilih = formatKey(sekarang);
     let tanggalPending = "";
 
     /* =======================================================
-       10.2 TAMPILKAN TANGGAL HARI INI
+       7.2 TAMPILKAN TANGGAL HARI INI
     ======================================================== */
     document.getElementById("tanggal").textContent =
       sekarang.toLocaleDateString("id-ID", {
@@ -514,7 +897,7 @@
       });
 
     /* =======================================================
-       10.3 FORMAT TANGGAL MENJADI yyyy-mm-dd
+       7.3 FORMAT TANGGAL MENJADI yyyy-mm-dd
     ======================================================== */
     function formatKey(date){
       const y = date.getFullYear();
@@ -524,7 +907,7 @@
     }
 
     /* =======================================================
-       10.4 NORMALISASI TANGGAL DARI SPREADSHEET
+       7.4 NORMALISASI TANGGAL DARI SPREADSHEET
     ======================================================== */
     function normalisasiTanggal(value) {
       value = String(value || "").trim();
@@ -546,7 +929,7 @@
     }
 
     /* =======================================================
-       10.5 MODAL KONFIRMASI SAAT PILIH TANGGAL LAIN
+       7.5 MODAL KONFIRMASI TANGGAL
     ======================================================== */
     function tampilModalTanggal(tanggal) {
       tanggalPending = tanggal;
@@ -569,24 +952,28 @@
       document.getElementById("modalTanggal").style.display = "none";
 
       document.getElementById("hasil").innerHTML =
-        "Tanggal dipilih : " + tanggalDipilih;
+        "Tanggal dipilih";
+
+      document.getElementById("lastUpdate").innerHTML =
+        tanggalDipilih;
 
       buatKalender();
     }
 
     /* =======================================================
-       10.6 AMBIL DATA DARI GOOGLE SPREADSHEET
+       7.6 AMBIL DATA DARI GOOGLE SPREADSHEET
     ======================================================== */
     function ambilDataSpreadsheet() {
       document.getElementById("hasil").innerHTML =
         "Memuat data kalender...";
 
+      document.getElementById("lastUpdate").innerHTML =
+        "Menghubungkan ke Spreadsheet...";
+
       const callbackName = "terimaDataAbsen_" + Date.now();
 
       window[callbackName] = function(data) {
         dataAbsen = {};
-
-        let jumlahDataCocok = 0;
 
         data.forEach(function(item) {
           const nama = String(item.nama || "").trim().toUpperCase();
@@ -595,14 +982,24 @@
 
           if (nama === namaSaya.toUpperCase() && tanggal) {
             dataAbsen[tanggal] = status;
-            jumlahDataCocok++;
           }
         });
 
         buatKalender();
 
+        const waktuUpdate = new Date().toLocaleString("id-ID", {
+          day:"numeric",
+          month:"long",
+          year:"numeric",
+          hour:"2-digit",
+          minute:"2-digit"
+        });
+
         document.getElementById("hasil").innerHTML =
-        "Data kalender termuat";
+          "Data kalender termuat";
+
+        document.getElementById("lastUpdate").innerHTML =
+          "Terakhir diperbarui: " + waktuUpdate;
 
         delete window[callbackName];
 
@@ -630,6 +1027,10 @@
       script.onerror = function() {
         document.getElementById("hasil").innerHTML =
           "Gagal mengambil data kalender";
+
+        document.getElementById("lastUpdate").innerHTML =
+          "Periksa koneksi internet Anda.";
+
         buatKalender();
       };
 
@@ -637,21 +1038,24 @@
     }
 
     /* =======================================================
-       10.7 KIRIM ABSEN KE GOOGLE SPREADSHEET
+       7.7 KIRIM ABSEN KE GOOGLE SPREADSHEET
     ======================================================== */
     function absen(status) {
       if (!navigator.onLine) {
         document.getElementById("hasil").innerHTML =
-          "Anda sedang offline. Absen belum bisa dikirim.";
+          "Anda sedang offline.";
+
+        document.getElementById("lastUpdate").innerHTML =
+          "Absen belum bisa dikirim.";
+
         return;
       }
 
-      if (!tanggalDipilih) {
-        alert("Pilih tanggal di kalender terlebih dahulu");
-        return;
-      }
+      document.getElementById("hasil").innerHTML =
+        "Mengirim absen...";
 
-      document.getElementById("hasil").innerHTML = "Mengirim absen...";
+      document.getElementById("lastUpdate").innerHTML =
+        "Mohon tunggu sebentar.";
 
       fetch(scriptURL, {
         method: "POST",
@@ -667,18 +1071,24 @@
       })
       .then(() => {
         document.getElementById("hasil").innerHTML =
-          "Absen berhasil : " + tanggalDipilih + " - " + status;
+          "Absen berhasil";
+
+        document.getElementById("lastUpdate").innerHTML =
+          tanggalDipilih + " - " + status;
 
         setTimeout(ambilDataSpreadsheet, 1500);
       })
       .catch(() => {
         document.getElementById("hasil").innerHTML =
           "Gagal mengirim data";
+
+        document.getElementById("lastUpdate").innerHTML =
+          "Silakan coba lagi.";
       });
     }
 
     /* =======================================================
-       10.8 BUAT DAN TAMPILKAN KALENDER
+       7.8 BUAT DAN TAMPILKAN KALENDER
     ======================================================== */
     function buatKalender(){
       const calendar = document.getElementById("calendar");
@@ -749,7 +1159,10 @@
           tanggalDipilih = keyTanggal;
 
           document.getElementById("hasil").innerHTML =
-            "Tanggal dipilih : " + tanggalDipilih;
+            "Tanggal dipilih";
+
+          document.getElementById("lastUpdate").innerHTML =
+            tanggalDipilih;
 
           buatKalender();
         });
@@ -778,7 +1191,7 @@
     }
 
     /* =======================================================
-       10.9 TOMBOL SEGITIGA PINDAH BULAN
+       7.9 TOMBOL PINDAH BULAN
     ======================================================== */
     document.getElementById("prevMonthBtn").addEventListener("click", function() {
       bulanTampil--;
@@ -803,14 +1216,14 @@
     });
 
     /* =======================================================
-       10.10 DAFTARKAN SERVICE WORKER PWA
+       7.10 SERVICE WORKER PWA
     ======================================================== */
     if ("serviceWorker" in navigator) {
       navigator.serviceWorker.register("sw.js");
     }
 
     /* =======================================================
-       10.11 TOMBOL INSTALL APLIKASI
+       7.11 TOMBOL INSTALL APLIKASI
     ======================================================== */
     let deferredPrompt;
     const installBtn = document.getElementById("installBtn");
@@ -832,7 +1245,7 @@
     });
 
     /* =======================================================
-       10.12 BAR STATUS ONLINE / OFFLINE
+       7.12 BAR STATUS ONLINE / OFFLINE
     ======================================================== */
     function updateStatusOnline() {
       const offlineBar = document.getElementById("offlineBar");
@@ -852,7 +1265,7 @@
     updateStatusOnline();
 
     /* =======================================================
-       10.13 JALANKAN APLIKASI SAAT HALAMAN DIBUKA
+       7.13 JALANKAN APLIKASI
     ======================================================== */
     ambilDataSpreadsheet();
 
