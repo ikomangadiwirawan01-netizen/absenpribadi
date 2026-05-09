@@ -768,7 +768,7 @@
 
       <div>
         <div id="tanggal"></div>
-        <div class="today-subtitle">Selamat bekerja! Tetap semangat 💪</div>
+        <div class="today-subtitle" id="quoteHarian">Memuat kata motivasi...</div>
       </div>
     </section>
 
@@ -895,6 +895,91 @@
         month: "long",
         year: "numeric"
       });
+
+    /* =======================================================
+       7.2B QUOTE HARIAN DARI INTERNET
+    ======================================================== */
+    const quoteCadangan = [
+      "Selamat bekerja! Tetap semangat 💪",
+      "Hari ini kesempatan baru untuk jadi lebih baik ✨",
+      "Kerja ikhlas, hasil berkualitas ✅",
+      "Semangat pagi! Rezeki dimulai dari disiplin 🌿",
+      "Langkah kecil hari ini bisa jadi hasil besar nanti 🚀",
+      "Tetap fokus, tetap kuat, tetap produktif 🔥",
+      "Disiplin hari ini adalah sukses esok hari ⭐",
+      "Kerja rapi, hati tenang, hasil maksimal 💼",
+      "Jangan lupa bersyukur dan tetap semangat 🙏",
+      "Hari ini harus lebih baik dari kemarin 💪",
+      "Bekerja dengan hati membuat hari lebih berarti 🌞",
+      "Mulai hari ini dengan niat baik dan semangat baru 🌱",
+      "Kesuksesan dibangun dari kebiasaan kecil yang konsisten 📌",
+      "Tetap tenang, tetap jalan, tetap percaya proses 💫",
+      "Hasil baik datang dari kerja yang sungguh-sungguh 🧭",
+      "Tidak harus sempurna, yang penting terus bergerak 🔄",
+      "Kerja hari ini adalah tabungan hasil untuk besok 📈",
+      "Semangat adalah bahan bakar dari kedisiplinan ⚡",
+      "Mulai dengan senyum, selesaikan dengan tanggung jawab 😊",
+      "Setiap hari kerja adalah peluang untuk tumbuh 🌻",
+      "Fokus pada proses, hasil akan mengikuti 🎯",
+      "Datang tepat waktu adalah awal dari profesionalitas ⏰",
+      "Kerja kecil yang konsisten lebih kuat dari rencana besar tanpa aksi 🧱",
+      "Hari yang baik dimulai dari niat yang baik 🌤️",
+      "Tetap sabar, tetap disiplin, tetap maju 🚶",
+      "Jaga semangat, jaga kualitas, jaga kepercayaan 🤝",
+      "Satu pekerjaan selesai hari ini adalah satu langkah maju ✅",
+      "Jadikan hari ini produktif dan bermakna 📌",
+      "Bekerja bukan hanya hadir, tapi memberi yang terbaik 💚",
+      "Tetap rendah hati dan terus belajar 📚"
+    ];
+
+    function tampilQuoteCadangan() {
+      const index = sekarang.getDate() % quoteCadangan.length;
+
+      document.getElementById("quoteHarian").textContent =
+        quoteCadangan[index];
+    }
+
+    function ambilQuoteInternet() {
+      const quoteElement = document.getElementById("quoteHarian");
+
+      if (!quoteElement) {
+        return;
+      }
+
+      if (!navigator.onLine) {
+        tampilQuoteCadangan();
+        return;
+      }
+
+      fetch("https://quotes.liupurnomo.com/api/quotes/random")
+        .then(function(response) {
+          return response.json();
+        })
+        .then(function(data) {
+          let quote = "";
+
+          if (data.quote) {
+            quote = data.quote;
+          } else if (data.data && data.data.quote) {
+            quote = data.data.quote;
+          } else if (data.text) {
+            quote = data.text;
+          } else if (data.content) {
+            quote = data.content;
+          }
+
+          if (quote) {
+            quoteElement.textContent = quote;
+          } else {
+            tampilQuoteCadangan();
+          }
+        })
+        .catch(function() {
+          tampilQuoteCadangan();
+        });
+    }
+
+    ambilQuoteInternet();
 
     /* =======================================================
        7.3 FORMAT TANGGAL MENJADI yyyy-mm-dd
