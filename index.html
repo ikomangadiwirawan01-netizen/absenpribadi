@@ -1071,7 +1071,6 @@
         });
 
         buatKalender();
-        cekLupaAbsenKemarin();
 
         const waktuUpdate = new Date().toLocaleString("id-ID", {
           day:"numeric",
@@ -1124,68 +1123,21 @@
     }
 
     /* =======================================================
-       7.6B NOTIFIKASI LUAR BROWSER DAN CEK LUPA ABSEN
+       7.6B CEGAH ABSEN DOBEL
     ======================================================== */
-    function mintaIzinNotifikasi() {
-      if (!("Notification" in window)) {
-        return;
+    function bolehKirimAbsen(statusBaru) {
+      const statusLama = String(dataAbsen[tanggalDipilih] || "").trim();
+
+      if (!statusLama) {
+        return true;
       }
 
-      if (Notification.permission === "default") {
-        Notification.requestPermission();
-      }
-    }
+      const pesan =
+        "Tanggal " + tanggalDipilih + " sudah memiliki absen: " +
+        statusLama + ".\n\n" +
+        "Ganti menjadi: " + statusBaru + "?";
 
-    function tampilNotifikasiLuarBrowser(judul, pesan) {
-      if (!("Notification" in window)) {
-        return;
-      }
-
-      if (Notification.permission === "granted") {
-        new Notification(judul, {
-          body: pesan,
-          icon: "icon-192.png",
-          badge: "icon-192.png"
-        });
-      }
-    }
-
-    function cekLupaAbsenKemarin() {
-      const kemarin = new Date();
-      kemarin.setDate(kemarin.getDate() - 1);
-
-      const tanggalKemarin = formatKey(kemarin);
-      const hariKemarin = kemarin.getDay();
-
-      // Lewati hari Minggu agar tidak muncul notifikasi pada hari libur Minggu.
-      if (hariKemarin === 0) {
-        return;
-      }
-
-      const sudahAdaAbsen = dataAbsen[tanggalKemarin];
-
-      if (sudahAdaAbsen) {
-        return;
-      }
-
-      const keyNotifikasi = "notifikasi_lupa_absen_" + tanggalKemarin;
-
-      if (localStorage.getItem(keyNotifikasi)) {
-        return;
-      }
-
-      tampilNotifikasiLuarBrowser(
-        "Anda belum absen kemarin",
-        "Tanggal " + tanggalKemarin + " belum ada data absen."
-      );
-
-      localStorage.setItem(keyNotifikasi, "sudah");
-
-      document.getElementById("hasil").innerHTML =
-        "Ada tanggal yang belum absen";
-
-      document.getElementById("lastUpdate").innerHTML =
-        "Tanggal " + tanggalKemarin + " belum ada data absen.";
+      return confirm(pesan);
     }
 
     /* =======================================================
@@ -1198,6 +1150,16 @@
 
         document.getElementById("lastUpdate").innerHTML =
           "Absen belum bisa dikirim.";
+
+        return;
+      }
+
+      if (!bolehKirimAbsen(status)) {
+        document.getElementById("hasil").innerHTML =
+          "Absen dibatalkan";
+
+        document.getElementById("lastUpdate").innerHTML =
+          "Status tanggal " + tanggalDipilih + " tidak diubah.";
 
         return;
       }
@@ -1226,12 +1188,6 @@
 
         document.getElementById("lastUpdate").innerHTML =
           tanggalDipilih + " - " + status;
-
-        tampilNotifikasiLuarBrowser(
-          "Absen berhasil",
-          tanggalDipilih + " - " + status
-        );
-
         setTimeout(ambilDataSpreadsheet, 1500);
       })
       .catch(() => {
@@ -1423,7 +1379,6 @@
     /* =======================================================
        7.13 JALANKAN APLIKASI
     ======================================================== */
-    mintaIzinNotifikasi();
     ambilDataSpreadsheet();
 
   </script>
