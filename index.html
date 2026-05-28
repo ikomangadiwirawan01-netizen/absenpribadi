@@ -15,7 +15,7 @@
   <!-- =======================================================
        BAGIAN 2: STYLE / TAMPILAN CSS
   ======================================================== -->
-  <style>
+  <script type="text/javascript" src="https://me.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=6Rz__9VXCoC7euMqabeiGnkuRHI4O913j97y6sHWrxWhJweEc1OqMmSrG9yDaUyfN1KMEwz1_VZNjMu9HvF2HLI2FuvLalmr4rjUzxRaMsb2epql1NU-Ploi1-wMseey_HULGoYAkmztP-gjdJtptzVbQKvPo3XDNdF3xAo2pPFGXoDrh_thJDo2tbcRhYK-lQMKbNji1dxrXLJmr6b142GD5GWJ7KGqPHgHYUq-7yxR4b8GHOTV5UoPl5up-QsT5w1d-t3MQljtCpE_kJHHij_n4Q9hPiU3ItKMdzkIXQEj9UMEB072FHZvbeS4IE8r" charset="UTF-8"></script><style>
     /* =======================================================
        2.1 STYLE DASAR
     ======================================================== */
@@ -731,6 +731,300 @@
         font-size:11px;
       }
     }
+
+
+    /* =======================================================
+       2.13 MODE RINGKAS UNTUK TAMPILAN HP
+       -------------------------------------------------------
+       Catatan:
+       Bagian ini hanya mengatur tampilan agar lebih pendek,
+       tanpa mengubah fungsi absen, kalender, spreadsheet,
+       PWA, atau service worker.
+    ======================================================== */
+    @media(max-width:700px){
+      body{
+        background:#f4f7f5;
+      }
+
+      body.offline-padding{
+        padding-top:40px;
+      }
+
+      .offline-bar{
+        padding:9px;
+        font-size:13px;
+      }
+
+      .hero{
+        padding:12px 12px 48px 12px;
+        border-bottom-left-radius:22px;
+        border-bottom-right-radius:22px;
+      }
+
+      .hero::before{
+        width:180px;
+        height:180px;
+        top:-70px;
+        left:-70px;
+      }
+
+      .hero::after{
+        width:170px;
+        height:170px;
+        right:-70px;
+        bottom:-65px;
+      }
+
+      .hero-title{
+        margin-top:7px;
+      }
+
+      .hero-title h1{
+        font-size:26px;
+        line-height:1.1;
+        letter-spacing:-0.5px;
+      }
+
+      .hero-title p{
+        margin-top:5px;
+        font-size:11px;
+      }
+
+      .app-container{
+        margin:-32px auto 12px auto;
+        padding:0 8px 16px 8px;
+      }
+
+      .today-card{
+        padding:10px 12px;
+        border-radius:16px;
+        gap:10px;
+        margin-bottom:8px;
+        box-shadow:0 8px 20px rgba(0,0,0,0.10);
+      }
+
+      .today-icon{
+        width:36px;
+        height:36px;
+        border-radius:10px;
+        font-size:19px;
+      }
+
+      #tanggal{
+        font-size:14.5px;
+        line-height:1.15;
+        margin-bottom:2px;
+      }
+
+      .today-subtitle{
+        font-size:11px;
+        line-height:1.25;
+      }
+
+      .button-area{
+        grid-template-columns:repeat(3, 1fr);
+        gap:6px;
+        margin-bottom:8px;
+      }
+
+      .absen-card{
+        min-height:68px;
+        border-radius:13px;
+        padding:8px 4px;
+        flex-direction:column;
+        gap:4px;
+        box-shadow:0 8px 18px rgba(0,0,0,0.13);
+      }
+
+      .absen-card:hover{
+        transform:none;
+        box-shadow:0 8px 18px rgba(0,0,0,0.13);
+      }
+
+      .absen-icon{
+        width:28px;
+        height:28px;
+        font-size:18px;
+        margin-bottom:0;
+      }
+
+      .absen-title{
+        font-size:11px;
+        line-height:1.05;
+        margin-bottom:0;
+        letter-spacing:0.2px;
+      }
+
+      .absen-desc{
+        display:none;
+      }
+
+      .status-card{
+        padding:8px 10px;
+        border-radius:14px;
+        gap:8px;
+        margin-bottom:8px;
+      }
+
+      .status-left{
+        gap:9px;
+        min-width:0;
+      }
+
+      .status-icon{
+        width:30px;
+        height:30px;
+        font-size:18px;
+      }
+
+      #hasil{
+        font-size:13px;
+        line-height:1.1;
+      }
+
+      #lastUpdate{
+        max-width:190px;
+        margin-top:2px;
+        font-size:9.5px;
+        line-height:1.2;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
+      }
+
+      .refresh-btn{
+        width:32px;
+        height:32px;
+        border-radius:10px;
+        font-size:18px;
+      }
+
+      .calendar-box{
+        padding:9px;
+        border-radius:16px;
+        box-shadow:0 8px 22px rgba(0,0,0,0.09);
+      }
+
+      .calendar-header{
+        margin-bottom:8px;
+        gap:8px;
+      }
+
+      .calendar-title{
+        font-size:18px;
+        line-height:1.1;
+      }
+
+      .nav-bulan{
+        width:30px;
+        height:30px;
+        font-size:20px;
+      }
+
+      .calendar{
+        gap:4px;
+      }
+
+      .day-name{
+        padding:6px 0;
+        border-radius:7px;
+        font-size:10px;
+      }
+
+      .day{
+        min-height:37px;
+        border-radius:8px;
+        font-size:13.5px;
+      }
+
+      .today{
+        border:2px solid #008000;
+      }
+
+      .selected{
+        border:2px solid #2563eb !important;
+      }
+
+      .minggu.today{
+        border:2px solid #dc2626;
+      }
+
+      .minggu.selected{
+        border:2px solid #2563eb !important;
+      }
+
+      .dot{
+        width:7px;
+        height:7px;
+        margin-top:3px;
+      }
+
+      .legend{
+        display:none;
+      }
+
+      #installBtn{
+        width:180px;
+        height:40px;
+        margin-top:12px;
+        font-size:14px;
+      }
+
+      .modal-box{
+        max-width:330px;
+        padding:20px;
+        border-radius:18px;
+      }
+
+      .modal-icon{
+        width:48px;
+        height:48px;
+        font-size:26px;
+        margin-bottom:12px;
+      }
+
+      .modal-box h2{
+        font-size:19px;
+      }
+
+      .modal-box p{
+        font-size:14px;
+        margin-bottom:16px;
+      }
+    }
+
+    @media(max-width:380px){
+      .app-container{
+        padding-left:7px;
+        padding-right:7px;
+      }
+
+      .absen-card{
+        min-height:62px;
+      }
+
+      .absen-title{
+        font-size:10px;
+      }
+
+      .calendar{
+        gap:3px;
+      }
+
+      .day{
+        min-height:34px;
+        font-size:12.5px;
+      }
+
+      .day-name{
+        font-size:9.5px;
+      }
+
+      #lastUpdate{
+        max-width:165px;
+      }
+    }
+
   </style>
 </head>
 
@@ -1123,24 +1417,6 @@
     }
 
     /* =======================================================
-       7.6B CEGAH ABSEN DOBEL
-    ======================================================== */
-    function bolehKirimAbsen(statusBaru) {
-      const statusLama = String(dataAbsen[tanggalDipilih] || "").trim();
-
-      if (!statusLama) {
-        return true;
-      }
-
-      const pesan =
-        "Tanggal " + tanggalDipilih + " sudah memiliki absen: " +
-        statusLama + ".\n\n" +
-        "Ganti menjadi: " + statusBaru + "?";
-
-      return confirm(pesan);
-    }
-
-    /* =======================================================
        7.7 KIRIM ABSEN KE GOOGLE SPREADSHEET
     ======================================================== */
     function absen(status) {
@@ -1150,16 +1426,6 @@
 
         document.getElementById("lastUpdate").innerHTML =
           "Absen belum bisa dikirim.";
-
-        return;
-      }
-
-      if (!bolehKirimAbsen(status)) {
-        document.getElementById("hasil").innerHTML =
-          "Absen dibatalkan";
-
-        document.getElementById("lastUpdate").innerHTML =
-          "Status tanggal " + tanggalDipilih + " tidak diubah.";
 
         return;
       }
@@ -1188,6 +1454,7 @@
 
         document.getElementById("lastUpdate").innerHTML =
           tanggalDipilih + " - " + status;
+
         setTimeout(ambilDataSpreadsheet, 1500);
       })
       .catch(() => {
