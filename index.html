@@ -15,7 +15,7 @@
   <!-- =======================================================
        BAGIAN 2: STYLE / TAMPILAN CSS
   ======================================================== -->
-  <script type="text/javascript" src="https://me.kis.v2.scr.kaspersky-labs.com/FD126C42-EBFA-4E12-B309-BB3FDD723AC1/main.js?attr=6Rz__9VXCoC7euMqabeiGnkuRHI4O913j97y6sHWrxWhJweEc1OqMmSrG9yDaUyfN1KMEwz1_VZNjMu9HvF2HLI2FuvLalmr4rjUzxRaMsb2epql1NU-Ploi1-wMseey_HULGoYAkmztP-gjdJtptzVbQKvPo3XDNdF3xAo2pPFGXoDrh_thJDo2tbcRhYK-lQMKbNji1dxrXLJmr6b142GD5GWJ7KGqPHgHYUq-7yxR4b8GHOTV5UoPl5up-QsT5w1d-t3MQljtCpE_kJHHij_n4Q9hPiU3ItKMdzkIXQEj9UMEB072FHZvbeS4IE8r" charset="UTF-8"></script><style>
+  <style>
     /* =======================================================
        2.1 STYLE DASAR
     ======================================================== */
@@ -458,13 +458,21 @@
     ======================================================== */
     #installBtn{
       display:none;
+      position:fixed;
+      left:50%;
+      bottom:14px;
+      transform:translateX(-50%);
+      z-index:9998;
       background:#333;
       color:white;
-      width:220px;
-      height:50px;
-      border-radius:10px;
-      margin-top:24px;
-      font-size:16px;
+      min-width:150px;
+      height:38px;
+      padding:0 16px;
+      border-radius:12px;
+      margin:0;
+      font-size:13px;
+      font-weight:700;
+      box-shadow:0 10px 24px rgba(0,0,0,0.25);
     }
 
     /* =======================================================
@@ -964,10 +972,11 @@
       }
 
       #installBtn{
-        width:180px;
-        height:40px;
-        margin-top:12px;
-        font-size:14px;
+        min-width:140px;
+        height:34px;
+        bottom:10px;
+        font-size:12px;
+        border-radius:11px;
       }
 
       .modal-box{
@@ -1022,6 +1031,213 @@
 
       #lastUpdate{
         max-width:165px;
+      }
+    }
+
+
+    /* =======================================================
+       2.14 MODE RINGKAS V2 / UI UX LEBIH PADAT UNTUK HP
+       -------------------------------------------------------
+       Catatan:
+       Ini hanya override tampilan mobile. Fungsi absen,
+       kalender, Spreadsheet, PWA, dan service worker tetap sama.
+    ======================================================== */
+    @media(max-width:700px){
+      body{
+        background:#f3f6f4;
+      }
+
+      .hero{
+        padding:10px 12px 42px 12px;
+        border-bottom-left-radius:20px;
+        border-bottom-right-radius:20px;
+      }
+
+      .hero-title{
+        margin-top:4px;
+      }
+
+      .hero-title h1{
+        font-size:24px;
+        line-height:1.05;
+      }
+
+      .hero-title p{
+        margin-top:4px;
+        font-size:10px;
+      }
+
+      .app-container{
+        margin:-29px auto 10px auto;
+        padding:0 8px 14px 8px;
+      }
+
+      .today-card{
+        padding:9px 11px;
+        border-radius:15px;
+        gap:9px;
+        margin-bottom:6px;
+      }
+
+      .today-icon{
+        width:32px;
+        height:32px;
+        border-radius:9px;
+        font-size:17px;
+      }
+
+      #tanggal{
+        font-size:14px;
+        line-height:1.1;
+      }
+
+      .today-subtitle{
+        display:-webkit-box;
+        -webkit-line-clamp:1;
+        -webkit-box-orient:vertical;
+        overflow:hidden;
+        font-size:10px;
+        line-height:1.2;
+      }
+
+      .button-area{
+        gap:5px;
+        margin-bottom:6px;
+      }
+
+      .absen-card{
+        min-height:58px;
+        border-radius:12px;
+        padding:7px 3px;
+        gap:3px;
+      }
+
+      .absen-icon{
+        width:24px;
+        height:24px;
+        font-size:16px;
+      }
+
+      .absen-title{
+        font-size:10px;
+        line-height:1.02;
+        letter-spacing:0;
+      }
+
+      .status-card{
+        padding:7px 8px;
+        border-radius:13px;
+        margin-bottom:6px;
+        gap:6px;
+      }
+
+      .status-left{
+        gap:7px;
+      }
+
+      .status-icon{
+        width:26px;
+        height:26px;
+        font-size:16px;
+      }
+
+      #hasil{
+        font-size:12px;
+      }
+
+      #lastUpdate{
+        max-width:205px;
+        font-size:9px;
+      }
+
+      .refresh-btn{
+        width:28px;
+        height:28px;
+        border-radius:9px;
+        font-size:16px;
+      }
+
+      .calendar-box{
+        padding:8px;
+        border-radius:15px;
+      }
+
+      .calendar-header{
+        margin-bottom:7px;
+      }
+
+      .calendar-title{
+        font-size:17px;
+      }
+
+      .nav-bulan{
+        width:28px;
+        height:28px;
+        font-size:19px;
+      }
+
+      .calendar{
+        gap:3px;
+      }
+
+      .day-name{
+        padding:5px 0;
+        border-radius:7px;
+        font-size:9.5px;
+      }
+
+      .day{
+        min-height:33px;
+        border-radius:7px;
+        font-size:12.5px;
+      }
+
+      .dot{
+        width:6px;
+        height:6px;
+        margin-top:2px;
+      }
+
+      .today,
+      .selected,
+      .minggu.today,
+      .minggu.selected{
+        border-width:2px !important;
+      }
+
+      .modal-overlay{
+        padding:14px;
+      }
+    }
+
+    @media(max-width:380px){
+      .hero-title h1{
+        font-size:23px;
+      }
+
+      .today-card{
+        padding:8px 10px;
+      }
+
+      .absen-card{
+        min-height:54px;
+      }
+
+      .absen-title{
+        font-size:9.2px;
+      }
+
+      #lastUpdate{
+        max-width:160px;
+      }
+
+      .day{
+        min-height:31px;
+        font-size:12px;
+      }
+
+      .day-name{
+        font-size:9px;
       }
     }
 
@@ -1191,7 +1407,10 @@
       });
 
     /* =======================================================
-       7.2B QUOTE HARIAN DARI INTERNET
+       7.2B QUOTE HARIAN LOKAL
+       -------------------------------------------------------
+       Sengaja tidak mengambil quote dari internet agar tidak
+       muncul error CORS di Console saat dipasang di GitHub.
     ======================================================== */
     const quoteCadangan = [
       "Selamat bekerja! Tetap semangat 💪",
@@ -1227,53 +1446,17 @@
     ];
 
     function tampilQuoteCadangan() {
-      const index = sekarang.getDate() % quoteCadangan.length;
-
-      document.getElementById("quoteHarian").textContent =
-        quoteCadangan[index];
-    }
-
-    function ambilQuoteInternet() {
       const quoteElement = document.getElementById("quoteHarian");
 
       if (!quoteElement) {
         return;
       }
 
-      if (!navigator.onLine) {
-        tampilQuoteCadangan();
-        return;
-      }
-
-      fetch("https://quotes.liupurnomo.com/api/quotes/random")
-        .then(function(response) {
-          return response.json();
-        })
-        .then(function(data) {
-          let quote = "";
-
-          if (data.quote) {
-            quote = data.quote;
-          } else if (data.data && data.data.quote) {
-            quote = data.data.quote;
-          } else if (data.text) {
-            quote = data.text;
-          } else if (data.content) {
-            quote = data.content;
-          }
-
-          if (quote) {
-            quoteElement.textContent = quote;
-          } else {
-            tampilQuoteCadangan();
-          }
-        })
-        .catch(function() {
-          tampilQuoteCadangan();
-        });
+      const index = sekarang.getDate() % quoteCadangan.length;
+      quoteElement.textContent = quoteCadangan[index];
     }
 
-    ambilQuoteInternet();
+    tampilQuoteCadangan();
 
     /* =======================================================
        7.3 FORMAT TANGGAL MENJADI yyyy-mm-dd
@@ -1607,21 +1790,28 @@
     let deferredPrompt;
     const installBtn = document.getElementById("installBtn");
 
-    window.addEventListener("beforeinstallprompt", function(e) {
-      e.preventDefault();
-      deferredPrompt = e;
-      installBtn.style.display = "inline-block";
-    });
+    if (installBtn) {
+      window.addEventListener("beforeinstallprompt", function(e) {
+        /*
+          preventDefault dipakai agar tombol install custom bisa muncul.
+          Jika Chrome menampilkan warning di Console, itu hanya informasi
+          dari browser dan tidak merusak fungsi aplikasi.
+        */
+        e.preventDefault();
+        deferredPrompt = e;
+        installBtn.style.display = "inline-block";
+      });
 
-    installBtn.addEventListener("click", async function() {
-      installBtn.style.display = "none";
+      installBtn.addEventListener("click", async function() {
+        installBtn.style.display = "none";
 
-      if (deferredPrompt) {
-        deferredPrompt.prompt();
-        await deferredPrompt.userChoice;
-        deferredPrompt = null;
-      }
-    });
+        if (deferredPrompt) {
+          deferredPrompt.prompt();
+          await deferredPrompt.userChoice;
+          deferredPrompt = null;
+        }
+      });
+    }
 
     /* =======================================================
        7.12 BAR STATUS ONLINE / OFFLINE
