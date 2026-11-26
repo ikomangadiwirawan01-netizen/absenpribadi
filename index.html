@@ -1132,7 +1132,7 @@
     let tahunTampil = sekarang.getFullYear();
     let bulanTampil = sekarang.getMonth();
 
-    // Menyimpan array status per tanggal, contoh: { "2026-11-27": ["Masuk", "Lembur (2 Jam)"] }
+    // Menyimpan array status per tanggal, contoh: { "2026-11-26": ["Masuk", "Lembur (4 Jam)"] }
     let dataAbsen = {};
     let tanggalDipilih = formatKey(sekarang);
     let tanggalPending = "";
@@ -1245,6 +1245,24 @@
       return "blue";
     }
 
+    function tambahKeDataAbsen(tanggal, teksStatus) {
+      if (!teksStatus) return;
+      if (!dataAbsen[tanggal]) {
+        dataAbsen[tanggal] = [];
+      }
+
+      const kategoriBaru = getKategoriStatus(teksStatus);
+      const indexSama = dataAbsen[tanggal].findIndex(function(existing) {
+        return getKategoriStatus(existing) === kategoriBaru;
+      });
+
+      if (indexSama !== -1) {
+        dataAbsen[tanggal][indexSama] = teksStatus;
+      } else {
+        dataAbsen[tanggal].push(teksStatus);
+      }
+    }
+
     /* =======================================================
        7.5 MODAL KONFIRMASI TANGGAL
     ======================================================== */
@@ -1314,7 +1332,7 @@
 
       tutupModalLembur();
       document.getElementById("inputCatatanLembur").value = "";
-      absen(statusLembur);
+      kirimDataKeSpreadsheet({ status: "", lembur: statusLembur });
     }
 
     /* =======================================================
@@ -1335,24 +1353,12 @@
         data.forEach(function(item) {
           const nama = String(item.nama || "").trim().toUpperCase();
           const tanggal = normalisasiTanggal(item.tanggal);
-          const status = String(item.status || "").trim();
+          const statusUtama = String(item.status || "").trim();
+          const statusLembur = String(item.lembur || "").trim();
 
-          if (nama === namaSaya.toUpperCase() && tanggal && status) {
-            if (!dataAbsen[tanggal]) {
-              dataAbsen[tanggal] = [];
-            }
-
-            const kategoriBaru = getKategoriStatus(status);
-            // Jika kategori sama sudah ada di tanggal tersebut, perbarui dengan data terbaru
-            const indexSama = dataAbsen[tanggal].findIndex(function(existing) {
-              return getKategoriStatus(existing) === kategoriBaru;
-            });
-
-            if (indexSama !== -1) {
-              dataAbsen[tanggal][indexSama] = status;
-            } else {
-              dataAbsen[tanggal].push(status);
-            }
+          if (nama === namaSaya.toUpperCase() && tanggal) {
+            if (statusUtama) tambahKeDataAbsen(tanggal, statusUtama);
+            if (statusLembur) tambahKeDataAbsen(tanggal, statusLembur);
           }
         });
 
@@ -1411,7 +1417,11 @@
     /* =======================================================
        7.7 KIRIM ABSEN / LEMBUR KE GOOGLE SPREADSHEET
     ======================================================== */
-    function absen(status) {
+    function absen(statusUtama) {
+      kirimDataKeSpreadsheet({ status: statusUtama, lembur: "" });
+    }
+
+    function kirimDataKeSpreadsheet(payloadStatus) {
       if (!navigator.onLine) {
         document.getElementById("hasil").innerHTML =
           "Anda sedang offline.";
@@ -1421,6 +1431,8 @@
 
         return;
       }
+
+      const labelTampil = payloadStatus.lembur || payloadStatus.status;
 
       document.getElementById("hasil").innerHTML =
         "Mengirim data...";
@@ -1436,7 +1448,8 @@
         },
         body: JSON.stringify({
           nama: namaSaya,
-          status: status,
+          status: payloadStatus.status,
+          lembur: payloadStatus.lembur,
           tanggal: tanggalDipilih
         })
       })
@@ -1445,7 +1458,7 @@
           "Berhasil dicatat";
 
         document.getElementById("lastUpdate").innerHTML =
-          tanggalDipilih + " - " + status;
+          tanggalDipilih + " - " + labelTampil;
 
         setTimeout(ambilDataSpreadsheet, 1500);
       })
@@ -1548,7 +1561,7 @@
           const dotsWrap = document.createElement("div");
           dotsWrap.className = "dots-wrap";
 
-          // Urutkan agar titik kehadiran tampil di kiri dan titik lembur di kanan
+          // Titik status utama (Kolom C) di kiri, titik lembur (Kolom D) di kanan
           const statusUrut = daftarStatus.slice().sort(function(a, b) {
             const isLemburA = getKategoriStatus(a) === "lembur" ? 1 : 0;
             const isLemburB = getKategoriStatus(b) === "lembur" ? 1 : 0;
