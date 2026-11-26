@@ -171,12 +171,12 @@
     }
 
     /* =======================================================
-       2.6 TOMBOL ABSEN MODEL KARTU
+       2.6 TOMBOL ABSEN MODEL KARTU (4 KOLOM)
     ======================================================== */
     .button-area{
       display:grid;
-      grid-template-columns:repeat(3, 1fr);
-      gap:24px;
+      grid-template-columns:repeat(4, 1fr);
+      gap:18px;
       margin-bottom:28px;
     }
 
@@ -184,7 +184,7 @@
       min-height:190px;
       border-radius:24px;
       color:white;
-      padding:25px;
+      padding:22px 16px;
       box-shadow:0 18px 32px rgba(0,0,0,0.16);
       display:flex;
       flex-direction:column;
@@ -199,26 +199,26 @@
     }
 
     .absen-icon{
-      width:70px;
-      height:70px;
+      width:66px;
+      height:66px;
       border-radius:50%;
       background:white;
       display:flex;
       align-items:center;
       justify-content:center;
-      font-size:38px;
+      font-size:34px;
       font-weight:bold;
-      margin-bottom:16px;
+      margin-bottom:14px;
     }
 
     .absen-title{
-      font-size:25px;
+      font-size:21px;
       font-weight:800;
-      margin-bottom:8px;
+      margin-bottom:6px;
     }
 
     .absen-desc{
-      font-size:17px;
+      font-size:15px;
       opacity:0.95;
     }
 
@@ -244,6 +244,14 @@
 
     .tidak .absen-icon{
       color:#ef1717;
+    }
+
+    .lembur{
+      background:linear-gradient(135deg,#8b5cf6,#6d28d9);
+    }
+
+    .lembur .absen-icon{
+      color:#6d28d9;
     }
 
     /* =======================================================
@@ -310,7 +318,7 @@
     }
 
     /* =======================================================
-       2.8 KALENDER
+       2.8 KALENDER & MULTI TITIK INDIKATOR
     ======================================================== */
     .calendar-box{
       background:white;
@@ -417,11 +425,20 @@
       border:4px solid #dc2626;
     }
 
-    .dot{
-      width:16px;
-      height:16px;
-      border-radius:50%;
+    .dots-wrap{
+      display:flex;
+      align-items:center;
+      justify-content:center;
+      gap:5px;
       margin-top:8px;
+      min-height:14px;
+    }
+
+    .dot{
+      width:14px;
+      height:14px;
+      border-radius:50%;
+      flex-shrink:0;
     }
 
     /* =======================================================
@@ -434,7 +451,7 @@
       border-radius:14px;
       display:flex;
       justify-content:center;
-      gap:28px;
+      gap:24px;
       flex-wrap:wrap;
       font-size:15px;
       color:#5f6368;
@@ -476,7 +493,7 @@
     }
 
     /* =======================================================
-       2.11 MODAL KONFIRMASI TANGGAL
+       2.11 MODAL KONFIRMASI & MODAL LEMBUR
     ======================================================== */
     .modal-overlay{
       display:none;
@@ -492,7 +509,7 @@
     .modal-box{
       background:white;
       width:100%;
-      max-width:390px;
+      max-width:400px;
       border-radius:22px;
       padding:26px;
       text-align:center;
@@ -514,15 +531,74 @@
       font-weight:bold;
     }
 
+    .modal-icon.lembur-icon{
+      background:#ede9fe;
+      color:#6d28d9;
+      font-size:28px;
+    }
+
     .modal-box h2{
       margin:0 0 10px 0;
-      font-size:23px;
+      font-size:22px;
     }
 
     .modal-box p{
-      margin:0 0 20px 0;
+      margin:0 0 18px 0;
       color:#555;
       line-height:1.5;
+      font-size:15px;
+    }
+
+    .lembur-presets{
+      display:grid;
+      grid-template-columns:repeat(3, 1fr);
+      gap:8px;
+      margin-bottom:14px;
+    }
+
+    .preset-btn{
+      background:#f3f4f6;
+      color:#1f2937;
+      border:2px solid #e5e7eb;
+      border-radius:10px;
+      padding:10px 6px;
+      font-size:14px;
+      font-weight:700;
+      transition:0.15s ease;
+    }
+
+    .preset-btn.active{
+      background:#ede9fe;
+      border-color:#7c3aed;
+      color:#5b21b6;
+    }
+
+    .lembur-form{
+      text-align:left;
+      margin-bottom:18px;
+    }
+
+    .lembur-form label{
+      display:block;
+      font-size:13px;
+      font-weight:700;
+      color:#374151;
+      margin-bottom:5px;
+    }
+
+    .lembur-form input{
+      width:100%;
+      padding:10px 12px;
+      border:1px solid #d1d5db;
+      border-radius:10px;
+      font-size:15px;
+      margin-bottom:12px;
+      font-family:inherit;
+    }
+
+    .lembur-form input:focus{
+      outline:none;
+      border-color:#7c3aed;
     }
 
     .modal-actions{
@@ -536,6 +612,7 @@
       height:46px;
       color:white;
       font-size:16px;
+      font-weight:700;
       border-radius:10px;
     }
 
@@ -545,6 +622,10 @@
 
     .btn-lanjut{
       background:#2563eb;
+    }
+
+    .btn-simpan-lembur{
+      background:#6d28d9;
     }
 
     @keyframes modalMasuk{
@@ -559,199 +640,11 @@
     }
 
     /* =======================================================
-       2.12 RESPONSIVE COMPACT UNTUK HP
-    ======================================================== */
-    @media(max-width:700px){
-      .hero{
-        padding:18px 14px 70px 14px;
-        border-bottom-left-radius:28px;
-        border-bottom-right-radius:28px;
-      }
-
-      .hero-title{
-        margin-top:10px;
-      }
-
-      .hero-title h1{
-        font-size:34px;
-      }
-
-      .hero-title p{
-        font-size:14px;
-      }
-
-      .app-container{
-        margin:-48px auto 18px auto;
-        padding:0 10px 20px 10px;
-      }
-
-      .today-card{
-        padding:14px;
-        border-radius:20px;
-        margin-bottom:16px;
-      }
-
-      .today-icon{
-        width:44px;
-        height:44px;
-        font-size:24px;
-        border-radius:12px;
-      }
-
-      #tanggal{
-        font-size:17px;
-      }
-
-      .today-subtitle{
-        font-size:13px;
-      }
-
-      .button-area{
-        grid-template-columns:1fr;
-        gap:10px;
-        margin-bottom:16px;
-      }
-
-      .absen-card{
-        min-height:76px;
-        border-radius:16px;
-        flex-direction:row;
-        justify-content:center;
-        gap:14px;
-        padding:14px;
-      }
-
-      .absen-icon{
-        width:42px;
-        height:42px;
-        font-size:24px;
-        margin-bottom:0;
-      }
-
-      .absen-title{
-        font-size:20px;
-        margin-bottom:0;
-      }
-
-      .absen-desc{
-        font-size:13px;
-      }
-
-      .status-card{
-        padding:12px;
-        border-radius:16px;
-        margin-bottom:16px;
-      }
-
-      .status-icon{
-        width:40px;
-        height:40px;
-        font-size:22px;
-      }
-
-      #hasil{
-        font-size:17px;
-      }
-
-      #lastUpdate{
-        font-size:12px;
-      }
-
-      .refresh-btn{
-        width:42px;
-        height:42px;
-        font-size:22px;
-        border-radius:14px;
-      }
-
-      .calendar-box{
-        padding:12px;
-        border-radius:20px;
-      }
-
-      .calendar-header{
-        margin-bottom:14px;
-      }
-
-      .calendar-title{
-        font-size:24px;
-      }
-
-      .nav-bulan{
-        width:38px;
-        height:38px;
-        font-size:26px;
-      }
-
-      .calendar{
-        gap:5px;
-      }
-
-      .day-name{
-        font-size:12px;
-        padding:8px 0;
-        border-radius:9px;
-      }
-
-      .day{
-        min-height:52px;
-        font-size:17px;
-        border-radius:10px;
-      }
-
-      .dot{
-        width:11px;
-        height:11px;
-        margin-top:5px;
-      }
-
-      .legend{
-        gap:10px;
-        font-size:11px;
-        padding:10px;
-      }
-
-      .mini-dot{
-        width:11px;
-        height:11px;
-      }
-
-      .modal-actions{
-        flex-direction:column;
-      }
-
-      .modal-actions button{
-        width:100%;
-      }
-    }
-
-    @media(max-width:380px){
-      .day{
-        min-height:46px;
-        font-size:16px;
-      }
-
-      .calendar{
-        gap:4px;
-      }
-
-      .day-name{
-        font-size:11px;
-      }
-    }
-
-
-    /* =======================================================
-       2.13 MODE RINGKAS UNTUK TAMPILAN HP
-       -------------------------------------------------------
-       Catatan:
-       Bagian ini hanya mengatur tampilan agar lebih pendek,
-       tanpa mengubah fungsi absen, kalender, spreadsheet,
-       PWA, atau service worker.
+       2.12 MODE RINGKAS V2 / UI UX PADAT UNTUK HP
     ======================================================== */
     @media(max-width:700px){
       body{
-        background:#f4f7f5;
+        background:#f3f6f4;
       }
 
       body.offline-padding{
@@ -764,9 +657,9 @@
       }
 
       .hero{
-        padding:12px 12px 48px 12px;
-        border-bottom-left-radius:22px;
-        border-bottom-right-radius:22px;
+        padding:10px 12px 42px 12px;
+        border-bottom-left-radius:20px;
+        border-bottom-right-radius:20px;
       }
 
       .hero::before{
@@ -784,282 +677,13 @@
       }
 
       .hero-title{
-        margin-top:7px;
-      }
-
-      .hero-title h1{
-        font-size:26px;
-        line-height:1.1;
-        letter-spacing:-0.5px;
-      }
-
-      .hero-title p{
-        margin-top:5px;
-        font-size:11px;
-      }
-
-      .app-container{
-        margin:-32px auto 12px auto;
-        padding:0 8px 16px 8px;
-      }
-
-      .today-card{
-        padding:10px 12px;
-        border-radius:16px;
-        gap:10px;
-        margin-bottom:8px;
-        box-shadow:0 8px 20px rgba(0,0,0,0.10);
-      }
-
-      .today-icon{
-        width:36px;
-        height:36px;
-        border-radius:10px;
-        font-size:19px;
-      }
-
-      #tanggal{
-        font-size:14.5px;
-        line-height:1.15;
-        margin-bottom:2px;
-      }
-
-      .today-subtitle{
-        font-size:11px;
-        line-height:1.25;
-      }
-
-      .button-area{
-        grid-template-columns:repeat(3, 1fr);
-        gap:6px;
-        margin-bottom:8px;
-      }
-
-      .absen-card{
-        min-height:68px;
-        border-radius:13px;
-        padding:8px 4px;
-        flex-direction:column;
-        gap:4px;
-        box-shadow:0 8px 18px rgba(0,0,0,0.13);
-      }
-
-      .absen-card:hover{
-        transform:none;
-        box-shadow:0 8px 18px rgba(0,0,0,0.13);
-      }
-
-      .absen-icon{
-        width:28px;
-        height:28px;
-        font-size:18px;
-        margin-bottom:0;
-      }
-
-      .absen-title{
-        font-size:11px;
-        line-height:1.05;
-        margin-bottom:0;
-        letter-spacing:0.2px;
-      }
-
-      .absen-desc{
-        display:none;
-      }
-
-      .status-card{
-        padding:8px 10px;
-        border-radius:14px;
-        gap:8px;
-        margin-bottom:8px;
-      }
-
-      .status-left{
-        gap:9px;
-        min-width:0;
-      }
-
-      .status-icon{
-        width:30px;
-        height:30px;
-        font-size:18px;
-      }
-
-      #hasil{
-        font-size:13px;
-        line-height:1.1;
-      }
-
-      #lastUpdate{
-        max-width:190px;
-        margin-top:2px;
-        font-size:9.5px;
-        line-height:1.2;
-        white-space:nowrap;
-        overflow:hidden;
-        text-overflow:ellipsis;
-      }
-
-      .refresh-btn{
-        width:32px;
-        height:32px;
-        border-radius:10px;
-        font-size:18px;
-      }
-
-      .calendar-box{
-        padding:9px;
-        border-radius:16px;
-        box-shadow:0 8px 22px rgba(0,0,0,0.09);
-      }
-
-      .calendar-header{
-        margin-bottom:8px;
-        gap:8px;
-      }
-
-      .calendar-title{
-        font-size:18px;
-        line-height:1.1;
-      }
-
-      .nav-bulan{
-        width:30px;
-        height:30px;
-        font-size:20px;
-      }
-
-      .calendar{
-        gap:4px;
-      }
-
-      .day-name{
-        padding:6px 0;
-        border-radius:7px;
-        font-size:10px;
-      }
-
-      .day{
-        min-height:37px;
-        border-radius:8px;
-        font-size:13.5px;
-      }
-
-      .today{
-        border:2px solid #008000;
-      }
-
-      .selected{
-        border:2px solid #2563eb !important;
-      }
-
-      .minggu.today{
-        border:2px solid #dc2626;
-      }
-
-      .minggu.selected{
-        border:2px solid #2563eb !important;
-      }
-
-      .dot{
-        width:7px;
-        height:7px;
-        margin-top:3px;
-      }
-
-      .legend{
-        display:none;
-      }
-
-      #installBtn{
-        min-width:140px;
-        height:34px;
-        bottom:10px;
-        font-size:12px;
-        border-radius:11px;
-      }
-
-      .modal-box{
-        max-width:330px;
-        padding:20px;
-        border-radius:18px;
-      }
-
-      .modal-icon{
-        width:48px;
-        height:48px;
-        font-size:26px;
-        margin-bottom:12px;
-      }
-
-      .modal-box h2{
-        font-size:19px;
-      }
-
-      .modal-box p{
-        font-size:14px;
-        margin-bottom:16px;
-      }
-    }
-
-    @media(max-width:380px){
-      .app-container{
-        padding-left:7px;
-        padding-right:7px;
-      }
-
-      .absen-card{
-        min-height:62px;
-      }
-
-      .absen-title{
-        font-size:10px;
-      }
-
-      .calendar{
-        gap:3px;
-      }
-
-      .day{
-        min-height:34px;
-        font-size:12.5px;
-      }
-
-      .day-name{
-        font-size:9.5px;
-      }
-
-      #lastUpdate{
-        max-width:165px;
-      }
-    }
-
-
-    /* =======================================================
-       2.14 MODE RINGKAS V2 / UI UX LEBIH PADAT UNTUK HP
-       -------------------------------------------------------
-       Catatan:
-       Ini hanya override tampilan mobile. Fungsi absen,
-       kalender, Spreadsheet, PWA, dan service worker tetap sama.
-    ======================================================== */
-    @media(max-width:700px){
-      body{
-        background:#f3f6f4;
-      }
-
-      .hero{
-        padding:10px 12px 42px 12px;
-        border-bottom-left-radius:20px;
-        border-bottom-right-radius:20px;
-      }
-
-      .hero-title{
         margin-top:4px;
       }
 
       .hero-title h1{
         font-size:24px;
         line-height:1.05;
+        letter-spacing:-0.5px;
       }
 
       .hero-title p{
@@ -1077,6 +701,7 @@
         border-radius:15px;
         gap:9px;
         margin-bottom:6px;
+        box-shadow:0 8px 20px rgba(0,0,0,0.10);
       }
 
       .today-icon{
@@ -1089,6 +714,7 @@
       #tanggal{
         font-size:14px;
         line-height:1.1;
+        margin-bottom:2px;
       }
 
       .today-subtitle{
@@ -1101,6 +727,7 @@
       }
 
       .button-area{
+        grid-template-columns:repeat(4, 1fr);
         gap:5px;
         margin-bottom:6px;
       }
@@ -1108,20 +735,33 @@
       .absen-card{
         min-height:58px;
         border-radius:12px;
-        padding:7px 3px;
+        padding:7px 2px;
+        flex-direction:column;
         gap:3px;
+        box-shadow:0 8px 18px rgba(0,0,0,0.13);
+      }
+
+      .absen-card:hover{
+        transform:none;
+        box-shadow:0 8px 18px rgba(0,0,0,0.13);
       }
 
       .absen-icon{
         width:24px;
         height:24px;
-        font-size:16px;
+        font-size:15px;
+        margin-bottom:0;
       }
 
       .absen-title{
-        font-size:10px;
-        line-height:1.02;
+        font-size:9.3px;
+        line-height:1.05;
+        margin-bottom:0;
         letter-spacing:0;
+      }
+
+      .absen-desc{
+        display:none;
       }
 
       .status-card{
@@ -1133,6 +773,7 @@
 
       .status-left{
         gap:7px;
+        min-width:0;
       }
 
       .status-icon{
@@ -1143,11 +784,17 @@
 
       #hasil{
         font-size:12px;
+        line-height:1.1;
       }
 
       #lastUpdate{
         max-width:205px;
+        margin-top:2px;
         font-size:9px;
+        line-height:1.2;
+        white-space:nowrap;
+        overflow:hidden;
+        text-overflow:ellipsis;
       }
 
       .refresh-btn{
@@ -1160,14 +807,17 @@
       .calendar-box{
         padding:8px;
         border-radius:15px;
+        box-shadow:0 8px 22px rgba(0,0,0,0.09);
       }
 
       .calendar-header{
         margin-bottom:7px;
+        gap:8px;
       }
 
       .calendar-title{
         font-size:17px;
+        line-height:1.1;
       }
 
       .nav-bulan{
@@ -1192,10 +842,15 @@
         font-size:12.5px;
       }
 
-      .dot{
-        width:6px;
-        height:6px;
+      .dots-wrap{
+        gap:2.5px;
         margin-top:2px;
+        min-height:6px;
+      }
+
+      .dot{
+        width:5.5px;
+        height:5.5px;
       }
 
       .today,
@@ -1205,8 +860,51 @@
         border-width:2px !important;
       }
 
+      .legend{
+        display:none;
+      }
+
+      #installBtn{
+        min-width:140px;
+        height:34px;
+        bottom:10px;
+        font-size:12px;
+        border-radius:11px;
+      }
+
       .modal-overlay{
         padding:14px;
+      }
+
+      .modal-box{
+        max-width:340px;
+        padding:20px;
+        border-radius:18px;
+      }
+
+      .modal-icon{
+        width:48px;
+        height:48px;
+        font-size:26px;
+        margin-bottom:12px;
+      }
+
+      .modal-box h2{
+        font-size:19px;
+      }
+
+      .modal-box p{
+        font-size:13.5px;
+        margin-bottom:14px;
+      }
+
+      .modal-actions{
+        flex-direction:column;
+      }
+
+      .modal-actions button{
+        width:100%;
+        height:42px;
       }
     }
 
@@ -1224,7 +922,7 @@
       }
 
       .absen-title{
-        font-size:9.2px;
+        font-size:8.5px;
       }
 
       #lastUpdate{
@@ -1239,8 +937,12 @@
       .day-name{
         font-size:9px;
       }
-    }
 
+      .dot{
+        width:5px;
+        height:5px;
+      }
+    }
   </style>
 </head>
 
@@ -1283,7 +985,7 @@
     </section>
 
     <!-- =======================================================
-         BAGIAN 5.2: TOMBOL ABSEN
+         BAGIAN 5.2: TOMBOL ABSEN + LEMBUR
     ======================================================== -->
     <section class="button-area">
       <button class="absen-card masuk" onclick="absen('Masuk')">
@@ -1307,6 +1009,14 @@
         <div>
           <div class="absen-title">TIDAK MASUK</div>
           <div class="absen-desc">Saya tidak hadir</div>
+        </div>
+      </button>
+
+      <button class="absen-card lembur" onclick="bukaModalLembur()">
+        <div class="absen-icon">+</div>
+        <div>
+          <div class="absen-title">LEMBUR</div>
+          <div class="absen-desc">Catat jam lembur</div>
         </div>
       </button>
     </section>
@@ -1345,6 +1055,7 @@
         <span><i class="mini-dot" style="background:green"></i> Masuk</span>
         <span><i class="mini-dot" style="background:orange"></i> Setengah Hari</span>
         <span><i class="mini-dot" style="background:red"></i> Tidak Masuk</span>
+        <span><i class="mini-dot" style="background:#7c3aed"></i> Lembur</span>
         <span><i class="mini-dot" style="background:#fee2e2; border:1px solid #dc2626"></i> Hari Minggu</span>
       </div>
 
@@ -1358,7 +1069,7 @@
   </main>
 
   <!-- =======================================================
-       BAGIAN 6: MODAL KONFIRMASI TANGGAL
+       BAGIAN 6A: MODAL KONFIRMASI TANGGAL
   ======================================================== -->
   <div class="modal-overlay" id="modalTanggal">
     <div class="modal-box">
@@ -1371,6 +1082,36 @@
       <div class="modal-actions">
         <button class="btn-batal" onclick="batalPilihTanggal()">Batal</button>
         <button class="btn-lanjut" onclick="lanjutPilihTanggal()">Lanjutkan</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- =======================================================
+       BAGIAN 6B: MODAL CATAT LEMBUR
+  ======================================================== -->
+  <div class="modal-overlay" id="modalLembur">
+    <div class="modal-box">
+      <div class="modal-icon lembur-icon">⏱</div>
+      <h2>Catat Lembur</h2>
+      <p id="modalLemburTanggal">Tanggal: -</p>
+
+      <div class="lembur-presets">
+        <button type="button" class="preset-btn" onclick="pilihPresetLembur('1 Jam', this)">1 Jam</button>
+        <button type="button" class="preset-btn active" onclick="pilihPresetLembur('2 Jam', this)">2 Jam</button>
+        <button type="button" class="preset-btn" onclick="pilihPresetLembur('3 Jam', this)">3 Jam</button>
+      </div>
+
+      <div class="lembur-form">
+        <label for="inputDurasiLembur">Durasi Lembur</label>
+        <input type="text" id="inputDurasiLembur" value="2 Jam" placeholder="Contoh: 2.5 Jam atau 18:00 - 21:00">
+
+        <label for="inputCatatanLembur">Keterangan (Opsional)</label>
+        <input type="text" id="inputCatatanLembur" placeholder="Contoh: Selesaikan proyek">
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn-batal" onclick="tutupModalLembur()">Batal</button>
+        <button type="button" class="btn-simpan-lembur" onclick="kirimLembur()">Simpan Lembur</button>
       </div>
     </div>
   </div>
@@ -1391,6 +1132,7 @@
     let tahunTampil = sekarang.getFullYear();
     let bulanTampil = sekarang.getMonth();
 
+    // Menyimpan array status per tanggal, contoh: { "2026-11-27": ["Masuk", "Lembur (2 Jam)"] }
     let dataAbsen = {};
     let tanggalDipilih = formatKey(sekarang);
     let tanggalPending = "";
@@ -1408,9 +1150,6 @@
 
     /* =======================================================
        7.2B QUOTE HARIAN LOKAL
-       -------------------------------------------------------
-       Sengaja tidak mengambil quote dari internet agar tidak
-       muncul error CORS di Console saat dipasang di GitHub.
     ======================================================== */
     const quoteCadangan = [
       "Selamat bekerja! Tetap semangat 💪",
@@ -1447,11 +1186,7 @@
 
     function tampilQuoteCadangan() {
       const quoteElement = document.getElementById("quoteHarian");
-
-      if (!quoteElement) {
-        return;
-      }
-
+      if (!quoteElement) return;
       const index = sekarang.getDate() % quoteCadangan.length;
       quoteElement.textContent = quoteCadangan[index];
     }
@@ -1491,6 +1226,26 @@
     }
 
     /* =======================================================
+       7.4B HELPER KATEGORI & WARNA STATUS
+    ======================================================== */
+    function getKategoriStatus(statusRaw) {
+      const s = String(statusRaw || "").trim().toLowerCase();
+      if (s.includes("lembur")) return "lembur";
+      if (s.includes("setengah")) return "setengah";
+      if (s.includes("tidak")) return "tidak";
+      if (s.includes("masuk")) return "masuk";
+      return "lainnya";
+    }
+
+    function getWarnaDot(kategori) {
+      if (kategori === "lembur") return "#7c3aed";
+      if (kategori === "setengah") return "orange";
+      if (kategori === "tidak") return "red";
+      if (kategori === "masuk") return "green";
+      return "blue";
+    }
+
+    /* =======================================================
        7.5 MODAL KONFIRMASI TANGGAL
     ======================================================== */
     function tampilModalTanggal(tanggal) {
@@ -1513,13 +1268,53 @@
 
       document.getElementById("modalTanggal").style.display = "none";
 
+      const daftarStatus = dataAbsen[tanggalDipilih] || [];
       document.getElementById("hasil").innerHTML =
-        "Tanggal dipilih";
+        "Tanggal dipilih" + (daftarStatus.length ? " (" + daftarStatus.join(", ") + ")" : "");
 
       document.getElementById("lastUpdate").innerHTML =
         tanggalDipilih;
 
       buatKalender();
+    }
+
+    /* =======================================================
+       7.5B MODAL LEMBUR
+    ======================================================== */
+    function bukaModalLembur() {
+      document.getElementById("modalLemburTanggal").innerHTML =
+        "Tanggal lembur: <b>" + tanggalDipilih + "</b>";
+      document.getElementById("modalLembur").style.display = "flex";
+    }
+
+    function tutupModalLembur() {
+      document.getElementById("modalLembur").style.display = "none";
+    }
+
+    function pilihPresetLembur(durasi, el) {
+      document.getElementById("inputDurasiLembur").value = durasi;
+      document.querySelectorAll(".preset-btn").forEach(function(btn) {
+        btn.classList.remove("active");
+      });
+      if (el) el.classList.add("active");
+    }
+
+    function kirimLembur() {
+      const durasi = document.getElementById("inputDurasiLembur").value.trim();
+      const catatan = document.getElementById("inputCatatanLembur").value.trim();
+
+      let statusLembur = "Lembur";
+      if (durasi && catatan) {
+        statusLembur = "Lembur (" + durasi + " - " + catatan + ")";
+      } else if (durasi) {
+        statusLembur = "Lembur (" + durasi + ")";
+      } else if (catatan) {
+        statusLembur = "Lembur (" + catatan + ")";
+      }
+
+      tutupModalLembur();
+      document.getElementById("inputCatatanLembur").value = "";
+      absen(statusLembur);
     }
 
     /* =======================================================
@@ -1540,10 +1335,24 @@
         data.forEach(function(item) {
           const nama = String(item.nama || "").trim().toUpperCase();
           const tanggal = normalisasiTanggal(item.tanggal);
-          const status = String(item.status || "").trim().toLowerCase();
+          const status = String(item.status || "").trim();
 
-          if (nama === namaSaya.toUpperCase() && tanggal) {
-            dataAbsen[tanggal] = status;
+          if (nama === namaSaya.toUpperCase() && tanggal && status) {
+            if (!dataAbsen[tanggal]) {
+              dataAbsen[tanggal] = [];
+            }
+
+            const kategoriBaru = getKategoriStatus(status);
+            // Jika kategori sama sudah ada di tanggal tersebut, perbarui dengan data terbaru
+            const indexSama = dataAbsen[tanggal].findIndex(function(existing) {
+              return getKategoriStatus(existing) === kategoriBaru;
+            });
+
+            if (indexSama !== -1) {
+              dataAbsen[tanggal][indexSama] = status;
+            } else {
+              dataAbsen[tanggal].push(status);
+            }
           }
         });
 
@@ -1600,7 +1409,7 @@
     }
 
     /* =======================================================
-       7.7 KIRIM ABSEN KE GOOGLE SPREADSHEET
+       7.7 KIRIM ABSEN / LEMBUR KE GOOGLE SPREADSHEET
     ======================================================== */
     function absen(status) {
       if (!navigator.onLine) {
@@ -1608,13 +1417,13 @@
           "Anda sedang offline.";
 
         document.getElementById("lastUpdate").innerHTML =
-          "Absen belum bisa dikirim.";
+          "Data belum bisa dikirim.";
 
         return;
       }
 
       document.getElementById("hasil").innerHTML =
-        "Mengirim absen...";
+        "Mengirim data...";
 
       document.getElementById("lastUpdate").innerHTML =
         "Mohon tunggu sebentar.";
@@ -1633,7 +1442,7 @@
       })
       .then(() => {
         document.getElementById("hasil").innerHTML =
-          "Absen berhasil";
+          "Berhasil dicatat";
 
         document.getElementById("lastUpdate").innerHTML =
           tanggalDipilih + " - " + status;
@@ -1710,6 +1519,12 @@
 
         day.innerHTML = "<div>" + tgl + "</div>";
 
+        const daftarStatus = dataAbsen[keyTanggal] || [];
+
+        if (daftarStatus.length > 0) {
+          day.title = daftarStatus.join(" | ");
+        }
+
         day.addEventListener("click", function() {
           const tanggalHariIni = formatKey(sekarang);
 
@@ -1721,7 +1536,7 @@
           tanggalDipilih = keyTanggal;
 
           document.getElementById("hasil").innerHTML =
-            "Tanggal dipilih";
+            "Tanggal dipilih" + (daftarStatus.length ? " (" + daftarStatus.join(", ") + ")" : "");
 
           document.getElementById("lastUpdate").innerHTML =
             tanggalDipilih;
@@ -1729,23 +1544,26 @@
           buatKalender();
         });
 
-        const status = String(dataAbsen[keyTanggal] || "").trim().toLowerCase();
+        if (daftarStatus.length > 0) {
+          const dotsWrap = document.createElement("div");
+          dotsWrap.className = "dots-wrap";
 
-        if(status){
-          const dot = document.createElement("div");
-          dot.className = "dot";
+          // Urutkan agar titik kehadiran tampil di kiri dan titik lembur di kanan
+          const statusUrut = daftarStatus.slice().sort(function(a, b) {
+            const isLemburA = getKategoriStatus(a) === "lembur" ? 1 : 0;
+            const isLemburB = getKategoriStatus(b) === "lembur" ? 1 : 0;
+            return isLemburA - isLemburB;
+          });
 
-          if(status.includes("setengah")){
-            dot.style.background = "orange";
-          } else if(status.includes("tidak")){
-            dot.style.background = "red";
-          } else if(status.includes("masuk")){
-            dot.style.background = "green";
-          } else {
-            dot.style.background = "blue";
-          }
+          statusUrut.forEach(function(itemStatus) {
+            const kategori = getKategoriStatus(itemStatus);
+            const dot = document.createElement("div");
+            dot.className = "dot";
+            dot.style.background = getWarnaDot(kategori);
+            dotsWrap.appendChild(dot);
+          });
 
-          day.appendChild(dot);
+          day.appendChild(dotsWrap);
         }
 
         calendar.appendChild(day);
@@ -1792,11 +1610,6 @@
 
     if (installBtn) {
       window.addEventListener("beforeinstallprompt", function(e) {
-        /*
-          preventDefault dipakai agar tombol install custom bisa muncul.
-          Jika Chrome menampilkan warning di Console, itu hanya informasi
-          dari browser dan tidak merusak fungsi aplikasi.
-        */
         e.preventDefault();
         deferredPrompt = e;
         installBtn.style.display = "inline-block";
